@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Fire Tournament - User App</title>
+    <style>
+        :root {
+            --primary-color: #FF8C00;
+            --secondary-color: #4CAF50;
+            --background-color: #0D1117;
+            --card-background: #161B22;
+            --text-color: #E6EDF3;
+            --text-color-muted: #8B949E;
+            --border-color: #30363D;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --danger-color: #F85149;
+            --info-color: #58A6FF;
+            --success-color: var(--secondary-color);
+            --disabled-color: #484f58;
+            --disabled-text-color: #8B949E;
+
+            --accent-yellow: #F5B01C;
+            --accent-yellow-text: #161B22;
+            --accent-cyan: #22D3EE;
+            --tag-bg: #21262D;
+            --status-badge-bg: #30363D;
+            --btn-details-bg: #21262D;
+            --btn-details-text: var(--text-color);
+            --progress-bar-bg: #30363D;
+            --icon-color-default: var(--text-color-muted);
+            --icon-color-trophy: #FFD700;
+
+            --header-bg: #1A2238;
+            --header-icon-color: #E6EDF3;
+            --wallet-border-color: #ced6e0;
+            --app-logo-border: #8B949E;
+            --header-bottom-border: #2F3B52;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-family); background-color: var(--background-color); color: var(--text-color);
+            line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh; font-size: 16px;
+            padding-bottom: 70px; /* Add padding to prevent content from being hidden by bottom nav */
+        }
+        .container { width: 100%; max-width: 1200px; margin: 15px auto; padding: 0 20px; flex-grow: 1; }
+
+        header {
+            background-color: var(--header-bg); color: var(--text-color); padding: 12px 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid var(--header-bottom-border); min-height: 70px;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .app-logo { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--app-logo-border); padding: 2px; background-color: #2F3B52; object-fit: cover; }
+        .app-title-group { display: flex; flex-direction: column; }
+        .welcome-text { font-size: 0.75em; color: var(--text-color-muted); line-height: 1; }
+        header h1#appHeaderText { margin: 0; font-size: 1.1em; font-weight: 600; color: var(--text-color); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
+        .header-right { display: flex; align-items: center; gap: 15px; }
+        .icon-btn { background: none; border: none; color: var(--header-icon-color); cursor: pointer; padding: 5px; position: relative; display: flex; align-items: center; justify-content: center; }
+        .icon-btn svg { width: 22px; height: 22px; }
+        .icon-btn:hover { color: var(--primary-color); }
+        .wallet-display { background-color: white; color: black; padding: 8px 14px; border-radius: 6px; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.9em; border: 1.5px dashed var(--wallet-border-color); cursor: pointer; transition: transform 0.2s ease; white-space: nowrap; }
+        .wallet-display:hover { transform: scale(1.05); }
+        .wallet-display svg { width: 20px; height: 20px; fill: black; }
+        .logout-btn-header { background-color: var(--btn-details-bg); color: var(--btn-details-text); padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9em; font-weight: 600; transition: background-color 0.2s ease; }
+        .logout-btn-header:hover { background-color: var(--disabled-color); }
+
+        /* --- BOTTOM NAVIGATION BAR STYLES --- */
+        nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--header-bg);
+            display: flex;
+            justify-content: space-around;
+            padding: 5px 0;
+            border-top: 1px solid var(--border-color);
+            z-index: 100;
+        }
+        nav button {
+            background: none;
+            border: none;
+            color: var(--text-color-muted);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+            flex-grow: 1;
+            transition: color 0.2s ease;
+        }
+        nav button svg {
+            width: 24px;
+            height: 24px;
+            transition: fill 0.2s ease;
+            fill: var(--text-color-muted);
+        }
+        nav button span {
+            font-size: 12px;
+            font-weight: 500;
+        }
+        nav button:hover,
+        nav button.active {
+            color: var(--primary-color);
+        }
+        nav button:hover svg,
+        nav button.active svg {
+            fill: var(--primary-color);
+        }
+        
+        /* Specific Icon Colors */
+        nav button[data-page="tournamentsPage"].active svg { fill: var(--icon-color-trophy); }
+        nav button[data-page="myRegistrationsPage"].active svg { fill: var(--info-color); }
+        nav button[data-page="walletPage"].active svg { fill: var(--accent-cyan); }
+        nav button[data-page="myProfilePage"].active svg { fill: var(--secondary-color); }
+
+
+        #loginPageContainer { display: flex; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; padding: 20px; text-align: center; }
+        #loginPageContainer h2 { color: var(--primary-color); font-size: 2em; margin-bottom: 25px; }
+        #loginForm, #forgotPasswordForm { max-width: 400px; width:100%; padding: 25px 30px; background-color: var(--card-background); border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.4); border: 1px solid var(--border-color); }
+        #loginForm .form-group, #forgotPasswordForm .form-group { text-align: left; margin-bottom: 18px; }
+        #loginForm .login-button, #forgotPasswordForm .login-button { margin-top:15px; width: 100%; background-color: var(--accent-yellow); color: var(--accent-yellow-text); font-weight: 600; }
+        #loginForm .login-button:hover, #forgotPasswordForm .login-button:hover { background-color: #eab308; }
+        #loginForm .toggle-form, #forgotPasswordForm .toggle-form { color: var(--info-color); cursor: pointer; display: block; margin-top: 20px; font-size: 0.9em; text-align:center; }
+        #loginForm .toggle-form:hover, #forgotPasswordForm .toggle-form:hover { text-decoration: underline; }
+        #loginForm .auth-links { margin-top: 15px; text-align: center; }
+        #loginForm .auth-links .toggle-form { display: inline-block; margin: 5px 10px; }
+        #forgotPasswordForm h2 { color: var(--primary-color); font-size: 1.6em; margin-bottom: 20px; text-align:center;}
+        #forgotPasswordForm .login-button { margin-top:10px; width: 100%; background-color: var(--info-color); color:white; }
+        #forgotPasswordForm .login-button:hover { background-color: #2980b9; }
+
+
+        #mainAppContent { display: none; padding-top: 5px; }
+        .page-content { display: none; padding:20px; border: 1px solid var(--border-color); border-radius: 8px; background-color: var(--card-background); margin-bottom: 20px; box-shadow: 0 3px 10px rgba(0,0,0,0.2); }
+        .page-content.active { display: block; }
+        .page-content h2 { color: var(--primary-color); margin-top:0; border-bottom: 1px solid var(--border-color); padding-bottom:15px; font-size: 1.7em; margin-bottom: 20px; }
+        .tournament-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; }
+
+        .tournament-card { background-color: var(--card-background); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 12px; color: var(--text-color); transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; }
+        .tournament-card:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,0.15); }
+        .card-top-info { display: flex; justify-content: space-between; align-items: center; font-size: 0.8em; }
+        .card-tags { display: flex; gap: 6px; }
+        .card-tag, .card-status-badge { padding: 4px 10px; border-radius: 16px; font-weight: 500; font-size: 0.9em; }
+        .card-tag { background-color: var(--tag-bg); color: var(--text-color-muted); }
+        
+        .card-status-badge.status-upcoming { background-color: var(--info-color); color: white; }
+        .card-status-badge.status-live { background-color: var(--secondary-color); color: white; }
+        .card-status-badge.status-complete { background-color: var(--disabled-color); color: var(--disabled-text-color); }
+        .card-status-badge.status-full { background-color: var(--danger-color); color: white; }
+        .card-status-badge.status-canceled { background-color: var(--disabled-color); color: var(--disabled-text-color); }
+        
+        .card-main-info { display: flex; flex-direction: column; gap: 4px; }
+        .card-title { font-size: 1.25em; font-weight: 600; color: var(--text-color); display: flex; align-items: center; gap: 8px; }
+        .card-title .icon.trophy-icon { fill: var(--icon-color-trophy); width: 20px; height: 20px; }
+        .card-date { font-size: 0.9em; color: var(--text-color-muted); display: flex; align-items: center; gap: 6px; }
+        .card-date .icon.calendar-icon { fill: var(--icon-color-default); width: 16px; height: 16px; }
+        .card-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 12px 0; }
+        .stat-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; position: relative; padding: 0 5px; }
+        .stat-item:not(:last-child)::after { content: ''; position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 1px; height: 60%; background-color: var(--border-color); }
+        .stat-label { font-size: 0.75em; color: var(--text-color-muted); text-transform: uppercase; }
+        .stat-icon { height: 20px; display: flex; align-items: center; justify-content: center; margin-bottom: 2px; }
+        .stat-icon .icon.trophy-icon { fill: var(--icon-color-trophy); width: 16px; height: 16px; }
+        .stat-value { font-size: 1.05em; font-weight: 600; color: var(--text-color); }
+        .stat-value.entry-fee-value { color: var(--accent-cyan); }
+        .card-spots-info { font-size: 0.85em; color: var(--text-color-muted); }
+        .spots-text strong { color: var(--text-color); font-weight: 600; }
+        .spots-progress-bar-container { width: 100%; background-color: var(--progress-bar-bg); border-radius: 8px; height: 8px; margin-top: 6px; overflow: hidden; }
+        .spots-progress-bar { height: 100%; background-color: var(--primary-color); border-radius: 8px; width: 0%; transition: width 0.5s ease; }
+        .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+        .card-actions .btn { padding: 10px 15px; font-size: 0.95em; font-weight: 600; border-radius: 8px; border: none; cursor: pointer; text-align: center; transition: background-color 0.2s ease, transform 0.1s ease; }
+        .card-actions .btn:hover:not(:disabled) { transform: translateY(-2px); }
+        .card-actions .btn-details { background-color: var(--btn-details-bg); color: var(--btn-details-text); }
+        .card-actions .btn-details:hover:not(:disabled) { background-color: #30363D; }
+        .card-actions .btn-join { background-color: var(--accent-yellow); color: var(--accent-yellow-text); }
+        .card-actions .btn-join:hover:not(:disabled) { background-color: #eab308; }
+        .card-actions .btn:disabled, .card-actions .btn[disabled] { background-color: var(--disabled-color) !important; color: var(--disabled-text-color) !important; cursor: not-allowed; transform: none; }
+        .icon { display: inline-block; vertical-align: middle; }
+
+        .my-game-actions .btn-id-pass { background-color: var(--info-color); color: white; }
+        .my-game-actions .btn-id-pass:hover:not(:disabled) { background-color: #2980b9; }
+        .my-game-actions .btn-view-result { background-color: var(--accent-yellow); color: var(--accent-yellow-text); }
+        .my-game-actions .btn-view-result:hover:not(:disabled) { background-color: #eab308; }
+        .my-game-actions .btn-disabled-custom, .my-game-actions .btn-id-pass[disabled] { background-color: var(--disabled-color) !important; color: var(--disabled-text-color) !important; cursor: not-allowed; opacity: 0.7; }
+        #walletSection { display: flex; flex-direction: column; gap: 25px; }
+        .wallet-balance-display-card { background-color: var(--card-background); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; display: flex; align-items: center; gap: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); text-align: left; }
+        .wallet-icon-area svg { width: 50px; height: 50px; fill: var(--accent-cyan); }
+        .wallet-info-area { display: flex; flex-direction: column; }
+        .wallet-label-main { font-size: 0.9em; color: var(--text-color-muted); margin-bottom: 4px; text-transform: uppercase; }
+        .wallet-amount-main { font-size: 2.2em; font-weight: 700; color: var(--accent-cyan); line-height: 1.2; }
+        .wallet-demo-text-main { font-size: 0.8em; color: var(--text-color-muted); font-style: italic; }
+        .wallet-actions-container { display: flex; gap: 15px; justify-content: center; }
+        .btn-wallet { flex-grow: 1; max-width: 220px; padding: 12px 20px; font-size: 1em; font-weight: 600; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: background-color 0.3s ease, transform 0.2s ease; }
+        .btn-wallet:hover { transform: translateY(-2px); }
+        .btn-withdraw { background-color: var(--danger-color); color: white; }
+        .btn-withdraw:hover { background-color: #c0392b; }
+        .btn-add-funds { background-color: var(--secondary-color); color: white; }
+        .btn-add-funds:hover { background-color: #3e8e41; }
+        .modal { display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.85); padding-top: 50px; padding-bottom: 50px;}
+        .modal-content { background-color: var(--card-background); margin: 5% auto; padding: 25px 30px; border: 1px solid var(--border-color); width: 90%; max-width: 600px; border-radius: 10px; position: relative; box-shadow: 0 5px 25px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto;}
+        .close-btn { color: #ccc; position: absolute; top: 15px; right: 20px; font-size: 32px; font-weight: bold; cursor: pointer; line-height: 1; transition: color 0.2s ease;}
+        .close-btn:hover { color: var(--primary-color); }
+        .modal-content h2, .modal-content h3 { color: var(--primary-color); margin-top: 0; margin-bottom: 20px; font-size: 1.6em;}
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; margin-bottom: 6px; color: var(--text-color-muted); font-size: 0.95em; font-weight: 500;}
+        .form-group input[type="text"], .form-group input[type="number"], .form-group input[type="email"], .form-group input[type="password"], .form-group textarea, .form-group select, .form-group input[type="file"] { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background-color: #21262d; color: var(--text-color); font-size: 1em; transition: border-color 0.3s ease, box-shadow 0.3s ease;}
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--info-color); box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3); outline: none;}
+        .submit-btn, #loginForm .login-button { background-color: var(--accent-yellow); color: var(--accent-yellow-text); padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 1.05em; width: 100%; font-weight: 600; transition: background-color 0.3s ease, transform 0.1s ease;}
+        .submit-btn:hover:not(:disabled), #loginForm .login-button:hover:not(:disabled) { background-color: #eab308; transform: translateY(-2px);}
+        .submit-btn:disabled, #loginForm .login-button:disabled { background-color: var(--disabled-color) !important; color: var(--disabled-text-color) !important; cursor: not-allowed; transform: none;}
+        .modal-subtitle { font-size: 0.9em; color: var(--text-color-muted); margin-bottom: 15px; text-align: center; }
+        .payment-details-admin { background-color: var(--tag-bg); padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; border: 1px solid var(--border-color); }
+        .qr-code-container { margin-bottom: 10px; }
+        .qr-code-container img { max-width: 150px; height: auto; border-radius: 6px; border: 2px solid var(--border-color); }
+        .upi-id-container { font-size: 0.95em; color: var(--text-color-muted); }
+        .upi-id-container strong { color: var(--text-color); font-weight: 600; margin: 0 5px; }
+        .copy-btn { background: none; border: none; color: var(--info-color); cursor: pointer; padding: 2px 5px; vertical-align: middle; }
+        .copy-btn svg { width: 1em; height: 1em; }
+        .copy-btn:hover svg { stroke: var(--primary-color); }
+        .form-info-note { background-color: rgba(58, 166, 255, 0.1); border: 1px solid var(--info-color); color: var(--text-color); padding: 10px 15px; border-radius: 6px; font-size: 0.85em; margin-top: 15px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .form-info-note svg { min-width: 16px; }
+        #addAmountForm .submit-btn { background-color: var(--info-color); }
+        #addAmountForm .submit-btn:hover { background-color: #2980b9; }
+        .profile-details-card { background-color: var(--tag-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px; margin-bottom: 25px; display: flex; flex-direction: column; gap: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .profile-detail-item { display: flex; align-items: center; gap: 15px; padding: 15px; border-radius: 8px; transition: background-color 0.2s ease; }
+        .profile-detail-item:hover { background-color: var(--card-background); }
+        .profile-detail-icon { background-color: var(--background-color); padding: 10px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color); }
+        .profile-detail-icon svg { width: 24px; height: 24px; }
+        .profile-detail-item:nth-child(1) .profile-detail-icon svg { fill: var(--secondary-color); }
+        .profile-detail-item:nth-child(2) .profile-detail-icon svg { fill: var(--text-color-muted); }
+        .profile-detail-item:nth-child(3) .profile-detail-icon svg { fill: var(--primary-color); }
+        .profile-detail-item:nth-child(4) .profile-detail-icon svg { fill: var(--accent-cyan); }
+        .profile-detail-info { display: flex; flex-direction: column; gap: 2px; }
+        .profile-detail-label { font-size: 0.85em; color: var(--text-color-muted); font-weight: 500; }
+        .profile-detail-value { font-size: 1.1em; color: var(--text-color); font-weight: 600; }
+        .profile-links-section { margin-top: 35px; border-top: 1px solid var(--border-color); padding-top: 25px; }
+        .profile-links-section h3 { color: var(--primary-color); font-size: 1.2em; margin-bottom: 15px; font-weight: 600; }
+        .profile-link { display: block; background-color: var(--tag-bg); border: 1px solid var(--border-color); padding: 14px 18px; margin-bottom: 10px; border-radius: 8px; color: var(--text-color); text-decoration: none; transition: background-color 0.2s ease, border-color 0.2s ease; font-weight: 500; position: relative; cursor: pointer; }
+        .profile-link:hover { background-color: #30363D; border-color: var(--info-color); }
+        .profile-link::after { content: '›'; position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: var(--text-color-muted); font-size: 1.5em; font-weight: bold; line-height: 1; }
+        #notification { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); background-color: var(--info-color); color: white; padding: 15px 25px; border-radius: 8px; z-index: 2000; display: none; text-align: center; font-size:0.95em; box-shadow: 0 3px 10px rgba(0,0,0,0.3); max-width: 90%;}
+        .loading-spinner { border: 4px solid #555; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 25px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 15px; border: 1px solid var(--border-color); border-radius: 5px;}
+        .data-table { width: 100%; border-collapse: collapse; font-size:0.9em; min-width: 600px; }
+        .data-table th, .data-table td { border: 1px solid var(--border-color); padding: 10px 12px; text-align: left; vertical-align: middle; }
+        .data-table th { background-color: #21262d; color: var(--text-color-muted); font-weight: 600; white-space: nowrap; }
+        .data-table tr:nth-child(even) { background-color: #1a1f27; }
+        .data-table tr:hover { background-color: #21262d; }
+        
+        /* --- NEW STYLES FOR TRANSACTION HISTORY --- */
+        .transaction-history-section {
+            border-top: 1px solid var(--border-color);
+            padding-top: 25px;
+            margin-top: 40px; /* Add space above the history section */
+        }
+        .transaction-history-section h3 {
+            color: var(--primary-color);
+            font-size: 1.3em; /* Slightly smaller than page h2 */
+            margin-bottom: 15px;
+            border: none; /* No border for this sub-heading */
+            padding: 0;
+        }
+        .data-table .transaction-amount.credit {
+            color: var(--success-color);
+            font-weight: 600;
+        }
+        .data-table .transaction-amount.debit {
+            color: var(--danger-color);
+            font-weight: 600;
+        }
+        /* --- END OF NEW STYLES --- */
+        
+        .user-nav-item { display: flex; }
+
+        @media (max-width: 768px) { 
+            header { padding: 10px 15px; min-height: 65px; } 
+            header h1#appHeaderText { font-size: 0.95em; max-width: 120px;} 
+            .welcome-text { font-size: 0.7em;} 
+            .app-logo { width: 40px; height: 40px;} 
+            .icon-btn svg { width: 20px; height: 20px;} 
+            .wallet-display { padding: 4px 8px; font-size: 0.8em; gap: 4px;} 
+            .wallet-display svg { width: 16px; height: 16px;} 
+            .logout-btn-header { padding: 5px 10px; font-size: 0.75em;} 
+            .tournament-grid { grid-template-columns: 1fr; } 
+            .tournament-card { padding: 12px; } 
+            .card-title { font-size: 1.15em; } 
+            .stat-value { font-size: 1em; } 
+            .modal-content { width: 90%; margin: 10% auto; padding: 20px; } 
+            .modal-content h2, .modal-content h3 { font-size: 1.5em; } 
+            .page-content h2 { font-size: 1.6em; } 
+            .submit-btn, #loginForm .login-button { padding: 10px 18px; font-size: 1em; } 
+            #notification { padding: 12px 20px; font-size: 0.9em; bottom: 80px; } 
+            .wallet-balance-display-card { padding: 20px; gap: 15px; } 
+            .wallet-icon-area svg { width: 40px; height: 40px; } 
+            .wallet-amount-main { font-size: 2em; } 
+            .wallet-actions-container { flex-direction: column; align-items: center; } 
+            .btn-wallet { width: 100%; max-width: 300px; } 
+        }
+        @media (max-width: 480px) { 
+            header { padding: 8px 12px; min-height: 60px; gap: 8px; } 
+            .header-left { gap: 10px; } 
+            header h1#appHeaderText { font-size: 1em; max-width: 100px; } 
+            .app-logo { width: 38px; height: 38px; border-width: 1.5px;} 
+            .header-right { gap: 8px; } 
+            .wallet-display { padding: 5px 8px; font-size: 0.8em; gap: 4px; border-width: 1px;} 
+            .wallet-display svg { width: 16px; height: 16px;} 
+            .logout-btn-header { display: none; } 
+            .page-content { padding: 15px; } 
+            .page-content h2 { font-size: 1.4em;} 
+            .tournament-card { padding: 10px; } 
+            .card-top-info { font-size: 0.75em; } 
+            .card-tag, .card-status-badge { padding: 3px 8px; font-size: 0.85em; } 
+            .card-title { font-size: 1.1em; } 
+            .card-date { font-size: 0.8em; } 
+            .stat-label { font-size: 0.7em;} 
+            .stat-value { font-size: 0.95em; } 
+            .card-actions .btn { font-size: 0.85em; padding: 8px 10px; } 
+            .modal-content { width: 95%; padding: 15px; margin: 5% auto; } 
+            .modal-content h2, .modal-content h3 { font-size: 1.3em;} 
+            .close-btn { font-size: 28px; top: 10px; right: 15px;} 
+            .submit-btn, #loginForm .login-button { font-size: 0.95em; padding: 10px 15px; } 
+            #notification { width: 90%; font-size: 0.85em; padding: 10px 15px; bottom: 75px; } 
+            .data-table { font-size: 0.8em;} 
+            .wallet-balance-display-card { flex-direction: column; align-items: center; text-align: center; padding: 15px; } 
+            .wallet-info-area { align-items: center; } 
+            .wallet-amount-main { font-size: 1.8em; } 
+            .btn-wallet { font-size: 0.95em; padding: 10px 15px; } 
+            .transaction-history-section h3 { font-size: 1.3em; } 
+            .payment-details-admin { padding: 10px; } 
+            .qr-code-container img { max-width: 120px; } 
+            .modal-subtitle { font-size: 0.85em; } 
+            #addAmountModal .modal-content h2 { font-size: 1.5em; } 
+        }
+    </style>
+</head>
+<body>
+    
+    <header>
+        <div class="header-left">
+            <img src="https://i.ibb.co/gZt2XhgG/20250615-214407-11zon.png" alt="App Logo" class="app-logo" id="appLogoImage">
+            <div class="app-title-group">
+                <span class="welcome-text">Welcome</span>
+                <h1 id="appHeaderText">ClashFire</h1>
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="wallet-display" id="walletHeaderBtn" onclick="navigateToPage('walletPage')" style="display:none;">
+                <span class="wallet-balance-header" id="headerWalletBalance">₹0</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+            </button>
+            <button id="logoutBtnHeader" class="logout-btn-header" style="display:none;">Logout</button>
+        </div>
+    </header>
+
+    <div id="loginPageContainer">
+        <form id="loginForm">
+            <h2 id="formTitle">Login</h2>
+            <div class="form-group"><label for="emailInput">Email:</label><input type="email" id="emailInput" required></div>
+            <div class="form-group" id="passwordGroup"><label for="passwordInput">Password:</label><input type="password" id="passwordInput" required></div>
+            <div class="form-group" id="usernameGroup" style="display: none;"><label for="usernameInput">Username:</label><input type="text" id="usernameInput"></div>
+            <button type="submit" class="login-button" id="authButton">Login</button>
+            <div class="auth-links">
+                <span class="toggle-form" id="toggleAuthMode">Need an account? Sign Up</span>
+                <span class="toggle-form" id="forgotPasswordLink" style="display: block; margin-top: 10px;">Forgot Password?</span>
+            </div>
+        </form>
+        <form id="forgotPasswordForm" style="display: none; margin-top: 20px;">
+            <h2>Reset Password</h2>
+            <div class="form-group"><label for="resetEmailInput">Enter your Email:</label><input type="email" id="resetEmailInput" required></div>
+            <button type="submit" class="login-button">Send Reset Link</button>
+            <span class="toggle-form" id="backToLoginLink" style="display: block; margin-top: 15px;">Back to Login</span>
+        </form>
+    </div>
+
+    <div id="mainAppContent">
+        <nav id="appNavigation">
+            <button data-page="tournamentsPage" class="user-nav-item active">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#FFD700"><path d="M20.5 0C20.2239 0 20 0.223858 20 0.5V2H17V0.5C17 0.223858 16.7761 0 16.5 0H7.5C7.22386 0 7 0.223858 7 0.5V2H4V0.5C4 0.223858 3.77614 0 3.5 0C3.22386 0 3 0.223858 3 0.5V2C1.34315 2 0 3.34315 0 5V10C0 10.5523 0.447715 11 1 11H1.58579L5.29289 14.7071C5.68342 15.0976 6.31658 15.0976 6.70711 14.7071L8 13.4142V22.5C8 22.7761 8.22386 23 8.5 23H15.5C15.7761 23 16 22.7761 16 22.5V13.4142L17.2929 14.7071C17.6834 15.0976 18.3166 15.0976 18.7071 14.7071L22.4142 11H23C23.5523 11 24 10.5523 24 10V5C24 3.34315 22.6569 2 21 2V0.5C21 0.223858 20.7761 0 20.5 0ZM15 21H9V13L12 10L15 13V21ZM22 9.23607L19.5858 6.82188V5C19.5858 4.71005 19.3517 4.47593 19.0618 4.47593H20.0618C20.6141 4.47593 21.0618 4.92365 21.0618 5.47593V6.82188L18.6476 9.23607H22ZM5.06182 4.47593C4.50953 4.47593 4.06182 4.92365 4.06182 5.47593V6.82188L1.64756 9.23607H5.06182V4.47593ZM2.00001 5.47593C2.00001 4.92365 2.44772 4.47593 3.00001 4.47593H3.5858L6.00001 6.82188V9.23607H2.00001V5.47593Z"/></svg>
+                <span>Tournaments</span>
+            </button>
+            <button data-page="myRegistrationsPage" class="user-nav-item" style="display:none;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#58A6FF"><path d="M19 2H5C3.9 2 3 2.9 3 4v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V6h10v2z"/></svg>
+                <span>My Games</span>
+            </button>
+            <button data-page="walletPage" class="user-nav-item" style="display:none;">
+                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#22D3EE"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                <span>Wallet</span>
+            </button>
+            <button data-page="myProfilePage" class="user-nav-item" style="display:none;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#4CAF50"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                <span>Profile</span>
+            </button>
+        </nav>
+
+        <div class="container">
+            <div id="tournamentsPage" class="page-content active"><div id="tournamentGrid"><div class="loading-spinner" id="tournamentsLoader"></div></div></div>
+            <div id="myProfilePage" class="page-content">
+                <h2>My Profile</h2>
+                <div id="profileSection">
+                    <div class="profile-details-card">
+                        <div class="profile-detail-item">
+                            <div class="profile-detail-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            </div>
+                            <div class="profile-detail-info">
+                                <span class="profile-detail-label">Username</span>
+                                <span class="profile-detail-value" id="profileUsername">N/A</span>
+                            </div>
+                        </div>
+                        <div class="profile-detail-item">
+                            <div class="profile-detail-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                            </div>
+                            <div class="profile-detail-info">
+                                <span class="profile-detail-label">Email</span>
+                                <span class="profile-detail-value" id="profileEmail">N/A</span>
+                            </div>
+                        </div>
+                         <div class="profile-detail-item">
+                            <div class="profile-detail-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21.58 7.42L12 12.17 2.42 7.42 12 2.67l9.58 4.75zM12 13.83l9.58-4.75L12 18.33l-9.58-4.75L12 13.83zM3 8.5v8l9 4.5 9-4.5v-8l-9 4.5-9-4.5z"/></svg>
+                            </div>
+                            <div class="profile-detail-info">
+                                <span class="profile-detail-label">Free Fire ID (UID)</span>
+                                <span class="profile-detail-value" id="profileFFID">N/A</span>
+                            </div>
+                        </div>
+                        <div class="profile-detail-item">
+                             <div class="profile-detail-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58s1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41s-.22-1.05-.59-1.42zM13 20.99l-9-9V4h7v-.01l9 9-7 7.01z"/><circle cx="6.5" cy="6.5" r="1.5"/></svg>
+                            </div>
+                            <div class="profile-detail-info">
+                                <span class="profile-detail-label">In-Game Name (IGN)</span>
+                                <span class="profile-detail-value" id="profileIGN">N/A</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="submit-btn" style="max-width: 250px; margin: 25px auto 0 auto; display: block;" onclick="openProfileModal()">Edit Profile</button>
+                    
+                    <div class="profile-links-section">
+                        <h3>More Information</h3>
+                        <a class="profile-link" onclick="openPolicyModal('Privacy Policy', 'This is a placeholder for your Privacy Policy. Please replace this text with your actual policy content. \n\nWe are committed to protecting your privacy. This policy outlines how we collect, use, and safeguard your personal information.')">Privacy Policy</a>
+                        <a class="profile-link" onclick="openPolicyModal('Terms & Conditions', 'This is a placeholder for your Terms & Conditions. Please replace this text with your actual terms. \n\nBy using this app, you agree to comply with and be bound by the following terms and conditions of use.')">Terms & Conditions</a>
+                        <a class="profile-link" onclick="openPolicyModal('Refund & Cancellation', 'This is a placeholder for your Refund & Cancellation Policy. \n\n- Entry fees are non-refundable once a tournament has started.\n- If a tournament is canceled by the administration, all entry fees will be refunded to the user\'s wallet.\n- Withdrawal requests are processed within 24-48 hours.')">Refund & Cancellation</a>
+                        <a class="profile-link" onclick="openPolicyModal('Fair Play Policy', 'This is a placeholder for your Fair Play Policy. \n\n- All players must compete to the best of their ability.\n- Use of cheats, hacks, or any third-party software is strictly prohibited.\n- Abusive language and unsportsmanlike conduct will not be tolerated.\n- Violation of these rules may result in a permanent ban.')">Fair Play Policy</a>
+                        <a class="profile-link" onclick="navigateToPage('supportPage')">Help & Support</a>
+                    </div>
+                </div>
+            </div>
+            <div id="myRegistrationsPage" class="page-content"><h2>My Registered Games</h2><div id="myRegistrationsList"><p style='text-align:center;'>You haven't registered for any games yet.</p></div></div>
+            <div id="leaderboardPage" class="page-content"><h2>Leaderboard</h2><div class="form-group"><label for="leaderboardTournamentSelect">Select Tournament:</label><select id="leaderboardTournamentSelect" onchange="loadLeaderboardForSelectedTournament()"></select></div><div id="leaderboardDisplay"><p>Select a tournament to view its leaderboard.</p></div></div>
+            <div id="walletPage" class="page-content">
+                <h2>My Wallet</h2>
+                <div id="walletSection">
+                    <div class="wallet-balance-display-card">
+                        <div class="wallet-icon-area">
+                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="var(--accent-cyan)">
+                                <path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2zM4 18V6h16v12H4zm10-8H8v6h6v-2h2v-2h-2V8zm-2 0h-2v2h2V8z"/>
+                            </svg>
+                        </div>
+                        <div class="wallet-info-area">
+                            <span class="wallet-label-main">Current Balance</span>
+                            <span id="walletBalance" class="wallet-amount-main">₹0.00</span>
+                           
+                        </div>
+                    </div>
+                    <div class="wallet-actions-container">
+                        <button class="btn btn-wallet btn-withdraw" onclick="openWithdrawModal()">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l-7-7 7-7"/><path d="M19 12H5"/></svg>
+                            Withdraw Funds
+                        </button>
+                        <button class="btn btn-wallet btn-add-funds" onclick="openAddAmountModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            Add Funds
+                        </button>
+                    </div>
+
+                    <!-- === NEW TRANSACTION HISTORY SECTION === -->
+                    <div class="transaction-history-section">
+                        <h3>Transaction History</h3>
+                        <div id="transactionHistoryLoader" class="loading-spinner" style="display: none;"></div>
+                        <div id="transactionHistoryContainer">
+                            <!-- Transactions table will be loaded here by JavaScript -->
+                            <p style="text-align:center; color: var(--text-color-muted);">You have no transactions yet.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div id="supportPage" class="page-content"><h2>Support & Help</h2><h3>FAQs</h3><p><strong>Q: How to register?</strong> A: Go to Tournaments, pick one, click Join.</p><p><strong>Q: Room ID/Pass?</strong> A: Check "My Games" page before match time or look for in-app notifications.</p><h3>Contact Us</h3><p>Email: support@example.com (Placeholder)</p><p><a href="#" onclick="alert('Live chat / Ticketing placeholder.')" style="color: var(--info-color);">Live Chat (Placeholder)</a></p></div>
+        </div>
+    </div>
+
+    <div id="registrationModal" class="modal"> 
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('registrationModal')">×</span> 
+            <h2 id="modalTournamentNameReg">Register</h2> 
+            <p id="modalTournamentInfoReg"></p> 
+            <form id="registrationForm">
+                <input type="hidden" id="regTournamentIdInput">
+                <input type="hidden" id="regTournamentModeInput">
+                <div class="form-group"><label for="playerNameReg">Your IGN:</label><input type="text" id="playerNameReg" required></div>
+                <div class="form-group"><label for="ffIdReg">Your FF ID (UID):</label><input type="text" id="ffIdReg" pattern="[0-9]+" required></div>
+                <div class="form-group team-input" style="display:none;"><label for="teamNameReg">Team Name:</label><input type="text" id="teamNameReg"></div>
+                <div class="form-group team-input" style="display:none;"><label for="teammateFFIdsReg">Teammate FF IDs (comma-separated):</label><input type="text" id="teammateFFIdsReg"></div>
+                <p id="entryFeeInfoReg"></p>
+                <button type="submit" class="submit-btn" id="finalRegisterBtn">Confirm</button>
+            </form>
+        </div>
+    </div>
+    <div id="profileModal" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeModal('profileModal')">×</span><h2>Edit Profile</h2><form id="profileForm"><div class="form-group"><label for="profileUsernameInput">Username:</label><input type="text" id="profileUsernameInput" required></div><div class="form-group"><label for="profileFFIDInput">FF ID:</label><input type="text" id="profileFFIDInput" pattern="[0-9]+" required></div><div class="form-group"><label for="profileIGNInput">IGN:</label><input type="text" id="profileIGNInput" required></div><button type="submit" class="submit-btn">Save</button></form></div></div>
+    <div id="viewResultModal" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeModal('viewResultModal')">×</span><h3>Results: <span id="viewResultTournamentName"></span></h3><div id="viewResultContent"><p>Loading results...</p></div></div></div>
+    
+    <div id="policyModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('policyModal')">×</span>
+            <h2 id="policyModalTitle">Policy</h2>
+            <div id="policyModalContent" style="white-space: pre-wrap; color: var(--text-color-muted); line-height: 1.7;">
+                <p>Policy content will be loaded here.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div id="withdrawModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('withdrawModal')">×</span>
+            <h2>Withdraw Funds</h2>
+            <form id="withdrawForm">
+                <p>Current Balance: <span id="withdrawModalBalance">₹0.00</span></p>
+                <div class="form-group">
+                    <label for="withdrawAmount">Amount to Withdraw (₹):</label>
+                    <input type="number" id="withdrawAmount" placeholder="e.g., 50" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="withdrawMethod">Withdrawal Method (e.g., UPI ID, Bank Details):</label>
+                    <input type="text" id="withdrawMethod" placeholder="your-upi-id@okhdfc" required>
+                </div>
+                <button type="submit" class="submit-btn">Request Withdrawal</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="addAmountModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('addAmountModal')">×</span>
+            <h2>Add Amount</h2>
+            <p class="modal-subtitle">Pay to the UPI ID / Scan QR below, then submit details:</p>
+            <div class="payment-details-admin">
+                <div class="qr-code-container">
+                    <img src="YOUR_QR_CODE_IMAGE_URL_HERE" alt="Admin UPI QR Code" id="adminQrCodeImage">
+                </div>
+                <div class="upi-id-container">
+                    <span>Admin UPI:</span>
+                    <strong id="adminUpiIdDisplay">yourupi@bank</strong>
+                    <button class="copy-btn" onclick="copyToClipboard(document.getElementById('adminUpiIdDisplay').textContent, 'Admin UPI ID')" aria-label="Copy UPI ID">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </button>
+                </div>
+            </div>
+            <form id="addAmountForm">
+                <div class="form-group"><label for="amountPaidInput">Amount Paid (₹):</label><input type="number" id="amountPaidInput" placeholder="e.g., 100" min="1" required></div>
+                <div class="form-group"><label for="transactionIdInput">Transaction ID / UTR No.:</label><input type="text" id="transactionIdInput" placeholder="Enter unique transaction ID" required></div>
+                <div class="form-info-note">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--info-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    <span>Your request will be reviewed by an admin. Balance will be updated upon approval (usually within a few hours).</span>
+                </div>
+                <button type="submit" class="submit-btn" id="submitProofBtn">Submit Proof</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="notification"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+
+    <script>
+        const firebaseConfig = { apiKey: "AIzaSyBcOole8Om2Xvh-F9DBeg5pcjCRrWphXcE", authDomain: "tournament-1bcdd.firebaseapp.com", projectId: "tournament-1bcdd", storageBucket: "tournament-1bcdd.appspot.com", messagingSenderId: "357775256878", appId: "1:357775256878:web:569ac084ed35a35a741ebf", measurementId: "G-FWK8W68R63" };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // Global variables
+        let currentUser = null;
+        let allTournamentsCache = [];
+        let isSignUpMode = false;
+        
+        // Element references
+        const loginPageContainer = document.getElementById('loginPageContainer');
+        const mainAppContentDiv = document.getElementById('mainAppContent');
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('emailInput');
+        const passwordInput = document.getElementById('passwordInput');
+        const passwordGroup = document.getElementById('passwordGroup');
+        const usernameGroup = document.getElementById('usernameGroup');
+        const usernameInput = document.getElementById('usernameInput');
+        const authButton = document.getElementById('authButton');
+        const toggleAuthModeLink = document.getElementById('toggleAuthMode');
+        const formTitle = document.getElementById('formTitle');
+        const appNavigation = document.getElementById('appNavigation');
+        const pages = document.querySelectorAll('#mainAppContent .page-content');
+        const tournamentsLoader = document.getElementById('tournamentsLoader');
+        const tournamentGrid = document.getElementById('tournamentGrid');
+        const notificationDiv = document.getElementById('notification');
+        const appLogoImage = document.getElementById('appLogoImage');
+        const appHeaderText = document.getElementById('appHeaderText');
+        const welcomeText = document.querySelector('.welcome-text');
+        const walletHeaderBtn = document.getElementById('walletHeaderBtn');
+        const headerWalletBalance = document.getElementById('headerWalletBalance');
+        const logoutBtnHeader = document.getElementById('logoutBtnHeader');
+        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+        const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+        const backToLoginLink = document.getElementById('backToLoginLink');
+        const resetEmailInput = document.getElementById('resetEmailInput');
+        const addAmountForm = document.getElementById('addAmountForm');
+        const withdrawForm = document.getElementById('withdrawForm');
+        document.addEventListener('DOMContentLoaded', () => { if (appLogoImage) { appLogoImage.src = 'https://i.ibb.co/fYdQ4ssJ/20250615-223416-11zon.jpg'; appLogoImage.onerror = () => { if(appLogoImage) appLogoImage.style.display = 'none'; }; } db.collection('appSettings').doc('paymentInfo').get().then(doc => { const adminUpiIdElement = document.getElementById('adminUpiIdDisplay'); const adminQrCodeImageElement = document.getElementById('adminQrCodeImage'); const copyBtnElement = document.querySelector('#addAmountModal .copy-btn'); const defaultAdminUpi = 'yourupi@bank'; const defaultQrUrl = 'YOUR_QR_CODE_IMAGE_URL_HERE'; let upiToUse = defaultAdminUpi; let qrToUse = defaultQrUrl; if (doc.exists) { const data = doc.data(); upiToUse = data.adminUpiId || defaultAdminUpi; qrToUse = data.adminQrCodeUrl || defaultQrUrl; } if(adminUpiIdElement) adminUpiIdElement.textContent = upiToUse; if(adminQrCodeImageElement) { if (qrToUse && qrToUse !== 'YOUR_QR_CODE_IMAGE_URL_HERE') { adminQrCodeImageElement.src = qrToUse; adminQrCodeImageElement.style.display = 'block'; const existingMessage = adminQrCodeImageElement.parentElement.querySelector('.qr-unavailable-text'); if (existingMessage) existingMessage.remove(); } else { adminQrCodeImageElement.alt = "QR Code not available"; adminQrCodeImageElement.style.display = 'none'; const qrContainer = adminQrCodeImageElement.parentElement; if (qrContainer && !qrContainer.querySelector('.qr-unavailable-text')) { const p = document.createElement('p'); p.textContent = "Admin QR code not set up."; p.classList.add('qr-unavailable-text'); p.style.color='var(--text-color-muted)'; p.style.fontSize = '0.8em'; qrContainer.appendChild(p);}} } if(copyBtnElement && adminUpiIdElement) copyBtnElement.setAttribute('onclick', `copyToClipboard('${upiToUse}', 'Admin UPI ID')`); }).catch(err => { console.warn("Could not fetch admin payment settings, using defaults:", err); }); updateAuthFormUI(); });
+        appNavigation.addEventListener('click', (e) => { const button = e.target.closest('button'); if (button && button.dataset.page) { navigateToPage(button.dataset.page); } });
+        loginForm.addEventListener('submit', (e) => { e.preventDefault(); const email = emailInput.value; const password = passwordInput.value; authButton.disabled = true; authButton.textContent = isSignUpMode ? 'Signing Up...' : 'Logging In...'; if (isSignUpMode) { const username = usernameInput.value.trim(); if (!username) { showNotification("Username is required.", "error"); authButton.disabled = false; authButton.textContent = 'Sign Up'; return; } if (password.length < 6) { showNotification("Password min 6 chars.", "error"); authButton.disabled = false; authButton.textContent = 'Sign Up'; return; } auth.createUserWithEmailAndPassword(email, password) .then(uc => uc.user.updateProfile({ displayName: username }).then(() => db.collection('users').doc(uc.user.uid).set({ username: username, email: uc.user.email, ffId: '', ign: '', createdAt: firebase.firestore.FieldValue.serverTimestamp(), walletBalance: 0 }, { merge: true }))) .then(() => showNotification("Sign up successful!", "success")) .catch(err => showNotification(`Sign Up Error: ${err.message}`, "error")) .finally(() => { authButton.disabled = false; authButton.textContent = 'Sign Up';}); } else { auth.signInWithEmailAndPassword(email, password) .then(() => showNotification("Login successful!", "success")) .catch(err => showNotification(`Login Error: ${err.message}`, "error")) .finally(() => { authButton.disabled = false; authButton.textContent = 'Login';}); } });
+        toggleAuthModeLink.addEventListener('click', () => { isSignUpMode = !isSignUpMode; updateAuthFormUI(); loginForm.style.display = 'block'; forgotPasswordForm.style.display = 'none'; if(passwordGroup) passwordGroup.style.display = 'block'; });
+        if (logoutBtnHeader) { logoutBtnHeader.addEventListener('click', () => auth.signOut().then(() => showNotification("Logged out.", "info")).catch(err => showNotification(`Logout Error: ${err.message}`, "error")));}
+        if (forgotPasswordLink) { forgotPasswordLink.addEventListener('click', () => { loginForm.style.display = 'none'; forgotPasswordForm.style.display = 'block'; formTitle.textContent = "Reset Password"; });}
+        if (backToLoginLink) { backToLoginLink.addEventListener('click', () => { forgotPasswordForm.style.display = 'none'; loginForm.style.display = 'block'; isSignUpMode = false; updateAuthFormUI(); });}
+        if (forgotPasswordForm) { forgotPasswordForm.addEventListener('submit', (e) => { e.preventDefault(); const email = resetEmailInput.value; if (!email) { showNotification("Please enter your email.", "error"); return; } const forgotPassButton = forgotPasswordForm.querySelector('button[type="submit"]'); forgotPassButton.disabled = true; forgotPassButton.textContent = "Sending..."; auth.sendPasswordResetEmail(email) .then(() => { showNotification("Password reset email sent!", "success"); forgotPasswordForm.style.display = 'none'; loginForm.style.display = 'block'; isSignUpMode = false; updateAuthFormUI(); if(resetEmailInput) resetEmailInput.value = ''; }) .catch((error) => { showNotification(`Error: ${error.message}`, "error"); }) .finally(() => { forgotPassButton.disabled = false; forgotPassButton.textContent = "Send Reset Link"; }); });}
+        auth.onAuthStateChanged(async user => { if (user) { currentUser = user; if(welcomeText) welcomeText.textContent = `Welcome, ${user.displayName || user.email.split('@')[0]}`; if(appHeaderText) appHeaderText.textContent = "ClashFire"; if(logoutBtnHeader) logoutBtnHeader.style.display = 'inline-block'; if(walletHeaderBtn) walletHeaderBtn.style.display = 'flex'; loginPageContainer.style.display = 'none'; mainAppContentDiv.style.display = 'block'; document.querySelectorAll('.user-nav-item').forEach(item => { if(item.dataset.page==='myProfilePage'||item.dataset.page==='myRegistrationsPage'||item.dataset.page==='walletPage') { item.style.display='flex'; }}); await loadUserProfile(); fetchTournaments(); loadWalletBalance(); navigateToPage('tournamentsPage'); loginForm.style.display = 'block'; forgotPasswordForm.style.display = 'none'; updateAuthFormUI(); } else { currentUser = null; if(welcomeText) welcomeText.textContent = "Welcome"; if(appHeaderText) appHeaderText.textContent = "Tournament Hub"; if(logoutBtnHeader) logoutBtnHeader.style.display = 'none'; if(walletHeaderBtn) walletHeaderBtn.style.display = 'none'; if(headerWalletBalance) headerWalletBalance.textContent = '₹0'; loginPageContainer.style.display = 'flex'; mainAppContentDiv.style.display = 'none'; document.querySelectorAll('.user-nav-item').forEach(item => { if (item.dataset.page==='myProfilePage'||item.dataset.page==='myRegistrationsPage'||item.dataset.page==='walletPage') item.style.display='none'; }); if(tournamentGrid) tournamentGrid.innerHTML = ''; allTournamentsCache = []; loginForm.style.display = 'block'; forgotPasswordForm.style.display = 'none'; isSignUpMode = false; updateAuthFormUI(); emailInput.value = ''; passwordInput.value = ''; usernameInput.value = ''; } });
+        function updateAuthFormUI() { if (isSignUpMode) { formTitle.textContent = "Sign Up"; authButton.textContent = "Sign Up"; if(usernameGroup) usernameGroup.style.display = "block"; if(usernameInput) usernameInput.required = true; if(passwordGroup) passwordGroup.style.display = 'block'; if(passwordInput) passwordInput.required = true; toggleAuthModeLink.textContent = "Login"; if(forgotPasswordLink) forgotPasswordLink.style.display = 'block'; } else { formTitle.textContent = "Login"; authButton.textContent = "Login"; if(usernameGroup) usernameGroup.style.display = "none"; if(usernameInput) usernameInput.required = false; if(passwordGroup) passwordGroup.style.display = 'block'; if(passwordInput) passwordInput.required = true; toggleAuthModeLink.textContent = "Sign Up"; if(forgotPasswordLink) forgotPasswordLink.style.display = 'block'; } }
+        function navigateToPage(pageId) { showPage(pageId); appNavigation.querySelectorAll('button').forEach(btn => btn.classList.remove('active')); const navButton = appNavigation.querySelector(`button[data-page="${pageId}"]`); if(navButton) navButton.classList.add('active');}
+        
+        function showPage(pageId) {
+            pages.forEach(page => {
+                page.classList.remove('active');
+                if (page.id === pageId) page.classList.add('active');
+            });
+            if (pageId === 'myRegistrationsPage' && currentUser) loadMyRegistrations();
+            if (pageId === 'leaderboardPage') populateLeaderboardTournamentSelect();
+            if (pageId === 'walletPage' && currentUser) {
+                loadWalletBalance();
+                loadTransactionHistory(); // <-- MODIFIED: Load history on wallet page view
+            }
+            if (pageId === 'myProfilePage' && currentUser) loadUserProfile();
+        }
+
+        function fetchTournaments() {
+            if (!tournamentsLoader || !tournamentGrid) return;
+            tournamentsLoader.style.display = 'block';
+            tournamentGrid.innerHTML = '';
+            db.collection('tournaments').orderBy('dateTime', 'desc').onSnapshot(snapshot => {
+                tournamentsLoader.style.display = 'none';
+                tournamentGrid.innerHTML = '';
+                allTournamentsCache = [];
+                if (snapshot.empty) {
+                    tournamentGrid.innerHTML = "<p style='text-align:center;'>No tournaments available.</p>";
+                    return;
+                }
+                snapshot.forEach(doc => {
+                    const tournament = { id: doc.id, ...doc.data() };
+                    allTournamentsCache.push(tournament);
+                    renderTournamentCard(tournament);
+                });
+                populateLeaderboardTournamentSelect();
+                if (document.querySelector('#mainAppContent .page-content.active').id === 'myRegistrationsPage' && currentUser) {
+                    loadMyRegistrations();
+                }
+            }, error => {
+                tournamentsLoader.style.display = 'none';
+                tournamentGrid.innerHTML = "<p style='text-align:center; color: var(--danger-color);'>Error loading tournaments.</p>";
+                console.error("Error fetching tournaments: ", error);
+                showNotification("Error fetching tournaments: " + error.message, "error");
+            });
+        }
+
+        function renderTournamentCard(t) {
+            const card = document.createElement('div');
+            card.classList.add('tournament-card');
+            card.dataset.tournamentId = t.id;
+
+            const registeredCount = t.registeredPlayers ? t.registeredPlayers.length : 0;
+            const maxPlayers = t.maxPlayers || 1;
+            const spotsLeft = Math.max(0, maxPlayers - registeredCount);
+            const progressPercentage = maxPlayers > 0 ? Math.min(100, (registeredCount / maxPlayers) * 100) : 0;
+
+            const status = t.status || "Upcoming"; 
+            let statusText = status;
+            let statusBadgeClass = `status-${status.toLowerCase()}`;
+            
+            if (status === "Live") { statusText = "Live Now"; } 
+            else if (status === "Complete") { statusText = "Completed"; }
+            
+            if (status === 'Upcoming' && registeredCount >= maxPlayers) {
+                statusText = "Slots Full";
+                statusBadgeClass = "status-full";
+            }
+            
+            const displayDateTime = t.dateTime ? new Date(t.dateTime.toDate ? t.dateTime.toDate() : t.dateTime).toLocaleString('en-IN', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }) : 'Date TBD';
+            const prizePoolText = (t.prizePool && parseFloat(t.prizePool) > 0) ? `₹${parseFloat(t.prizePool).toLocaleString('en-IN')}` : "N/A";
+            const prizePerKillText = (t.prizePerKill && parseFloat(t.prizePerKill) > 0) ? `₹${parseFloat(t.prizePerKill).toFixed(2)}` : "N/A";
+            const entryFeeText = (t.entryFee && parseFloat(t.entryFee) > 0) ? `₹${parseFloat(t.entryFee).toFixed(2)}` : "Free";
+            
+            const trophySVG = `<svg class="icon trophy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 0C20.2239 0 20 0.223858 20 0.5V2H17V0.5C17 0.223858 16.7761 0 16.5 0H7.5C7.22386 0 7 0.223858 7 0.5V2H4V0.5C4 0.223858 3.77614 0 3.5 0C3.22386 0 3 0.223858 3 0.5V2C1.34315 2 0 3.34315 0 5V10C0 10.5523 0.447715 11 1 11H1.58579L5.29289 14.7071C5.68342 15.0976 6.31658 15.0976 6.70711 14.7071L8 13.4142V22.5C8 22.7761 8.22386 23 8.5 23H15.5C15.7761 23 16 22.7761 16 22.5V13.4142L17.2929 14.7071C17.6834 15.0976 18.3166 15.0976 18.7071 14.7071L22.4142 11H23C23.5523 11 24 10.5523 24 10V5C24 3.34315 22.6569 2 21 2V0.5C21 0.223858 20.7761 0 20.5 0Z"/></svg>`;
+            const calendarSVG = `<svg class="icon calendar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg>`;
+            
+            card.innerHTML = `
+                <div class="card-top-info">
+                    <div class="card-tags"><span class="card-tag">${t.mode || 'N/A'}</span><span class="card-tag">${t.map || 'N/A'}</span></div>
+                    <span class="card-status-badge ${statusBadgeClass}">${statusText}</span>
+                </div>
+                <div class="card-main-info">
+                    <div class="card-title">${trophySVG}<span>${t.name}</span></div>
+                    <div class="card-date">${calendarSVG}<span>${displayDateTime}</span></div>
+                </div>
+                <div class="card-stats-grid">
+                    <div class="stat-item"><span class="stat-label">Prize Pool</span><span class="stat-icon">${trophySVG}</span><span class="stat-value">${prizePoolText}</span></div>
+                    <div class="stat-item"><span class="stat-label">Per Kill</span><span class="stat-value">${prizePerKillText}</span></div>
+                    <div class="stat-item"><span class="stat-label">Entry Fee</span><span class="stat-value entry-fee-value">${entryFeeText}</span></div>
+                </div>
+                <div class="card-spots-info">
+                    <span class="spots-text"><strong>${spotsLeft > 0 ? spotsLeft : 'No'}</strong> Spot${spotsLeft !== 1 ? 's' : ''} Left (${registeredCount}/${maxPlayers})</span>
+                    <div class="spots-progress-bar-container"><div class="spots-progress-bar" style="width: ${progressPercentage}%;"></div></div>
+                </div>
+                <div class="card-actions">${generateUserActionButtons(t)}</div>
+            `;
+            if (tournamentGrid) tournamentGrid.appendChild(card);
+        }
+
+        function generateUserActionButtons(t) {
+            const status = t.status || 'Upcoming';
+            const isRegistered = isRegisteredForTournament(t.id);
+            const isFull = (t.registeredPlayers ? t.registeredPlayers.length : 0) >= t.maxPlayers;
+            const entryFee = parseFloat(t.entryFee) || 0;
+            
+            let actionButtonHTML = '';
+
+            if (isRegistered) {
+                actionButtonHTML = `<button class="btn btn-join" disabled>Registered</button>`;
+            } else {
+                switch (status) {
+                    case 'Upcoming':
+                        if (isFull) {
+                            actionButtonHTML = `<button class="btn btn-join" disabled>Slots Full</button>`;
+                        } else {
+                            const joinText = entryFee > 0 ? `Join for ₹${entryFee.toFixed(2)}` : 'Join Free';
+                            actionButtonHTML = `<button class="btn btn-join" onclick="openRegistrationModal('${t.id}')">${joinText}</button>`;
+                        }
+                        break;
+                    case 'Live':
+                        actionButtonHTML = `<button class="btn btn-join" disabled>Registration Closed</button>`;
+                        break;
+                    case 'Complete':
+                        actionButtonHTML = `<button class="btn btn-join" onclick="viewTournamentResult('${t.id}')">View Results</button>`;
+                        break;
+                    default: 
+                        actionButtonHTML = `<button class="btn btn-join" disabled>Unavailable</button>`;
+                        break;
+                }
+            }
+
+            return `
+                <button class="btn btn-details" onclick="viewTournamentDetails('${t.id}')">Details</button>
+                ${actionButtonHTML}
+            `;
+        }
+
+        function viewTournamentDetails(tournamentId) { const tournament = allTournamentsCache.find(t => t.id === tournamentId); if(!tournament) { showNotification("Tournament details not found.", "error"); return; } const displayDateTime = tournament.dateTime ?  new Date(tournament.dateTime.toDate ? tournament.dateTime.toDate() : tournament.dateTime).toLocaleString('en-IN', {  year: 'numeric', month:'long',day:'numeric',hour:'numeric',minute:'2-digit', hour12: true  }) : 'Date N/A'; const entryFeeText = (tournament.entryFee && parseFloat(tournament.entryFee) > 0) ? `₹${tournament.entryFee}` : "Free"; const prizePoolText = (tournament.prizePool && parseFloat(tournament.prizePool) > 0) ? `₹${tournament.prizePool}` : "N/A"; const prizePerKillText = (tournament.prizePerKill && parseFloat(tournament.prizePerKill) > 0) ? `₹${tournament.prizePerKill}` : "N/A"; let details = `Tournament: ${tournament.name}\n\nDate & Time: ${displayDateTime}\nMode: ${tournament.mode || 'N/A'}\nMap: ${tournament.map || 'N/A'}\nEntry Fee: ${entryFeeText}\nPrize Pool: ${prizePoolText}\nPrize Per Kill: ${prizePerKillText}\nMax Players: ${tournament.maxPlayers}\nRules: ${tournament.rules || 'Standard rules apply.'}\n\n`; if (isRegisteredForTournament(tournamentId)) { if (tournament.roomDetails && (tournament.status === 'Live' || tournament.status === 'Upcoming')) { details += `Room ID & Password: ${tournament.roomDetails}\n(Usually available 15-30 mins before match start)\n`; } else if (tournament.status === 'Complete' && tournament.roomDetails) { details += `Room Details (Past): ${tournament.roomDetails}\n`; } else { details += `Room ID & Password: Will be available on "My Games" page or via notification closer to match time.\n`; } } else { details += `Register to see Room ID & Password when available.\n`; } alert(details); }
+        function isRegisteredForTournament(tournamentId) { if(!currentUser) return false; const tournament = allTournamentsCache.find(t => t.id === tournamentId); return tournament && tournament.registeredPlayers && tournament.registeredPlayers.some(p => p.userId === currentUser.uid); }
+        const registrationForm = document.getElementById('registrationForm');
+        const regTournamentIdInput = document.getElementById('regTournamentIdInput');
+        const regTournamentModeInput = document.getElementById('regTournamentModeInput');
+        const teamDetailsRegDiv = document.querySelectorAll('.team-input');
+        async function openRegistrationModal(tournamentId) { if(!currentUser){showNotification("Please login to register.","info");return;} const t=allTournamentsCache.find(t=>t.id===tournamentId); if(!t){showNotification("Tournament not found.","error");return;} if(t.status !== 'Upcoming'){showNotification(`Cannot register: Tournament is ${t.status}.`,"warning");return;} const isFull = (t.registeredPlayers ? t.registeredPlayers.length : 0) >= t.maxPlayers; if(isFull) {showNotification("Cannot register: Tournament is full.","warning");return;} if(isRegisteredForTournament(tournamentId)){showNotification("You are already registered.","warning");return;} try{const d=await db.collection('users').doc(currentUser.uid).get(); if(d.exists){const ud=d.data(); document.getElementById('playerNameReg').value=ud.ign||''; document.getElementById('ffIdReg').value=ud.ffId||'';}else{document.getElementById('playerNameReg').value=''; document.getElementById('ffIdReg').value='';}}catch(e){showNotification("Error fetching profile.","error");return;} document.getElementById('modalTournamentNameReg').textContent=`Register for ${t.name}`; document.getElementById('modalTournamentInfoReg').textContent=`Mode: ${t.mode} | Entry: ${(t.entryFee&&parseFloat(t.entryFee)>0)?'₹'+t.entryFee:'Free'}`; regTournamentIdInput.value=tournamentId; regTournamentModeInput.value=t.mode.toLowerCase(); const itm=t.mode.toLowerCase()==='duo'||t.mode.toLowerCase()==='squad'; teamDetailsRegDiv.forEach(el=>el.style.display=itm?'block':'none'); if(document.getElementById('teamNameReg')) document.getElementById('teamNameReg').required=itm; const efn=parseFloat(t.entryFee)||0; const finalRegisterBtn=document.getElementById('finalRegisterBtn'); if(finalRegisterBtn){finalRegisterBtn.textContent=efn>0?`Pay ₹${t.entryFee} & Join`:'Join for Free';finalRegisterBtn.style.display='block'; finalRegisterBtn.disabled = false;} openModal('registrationModal'); }
+        if(registrationForm)registrationForm.addEventListener('submit', async (e) => { e.preventDefault(); handleRegistration(); });
+        async function handleRegistration() { if (!currentUser) { showNotification("User not logged in.", "error"); return; } const tournamentId = regTournamentIdInput.value; const tournament = allTournamentsCache.find(t => t.id === tournamentId); if (!tournament) { showNotification("Tournament not found.", "error"); return; } const tournamentMode = regTournamentModeInput.value.toLowerCase(); const playerName = document.getElementById('playerNameReg').value.trim(); const ffId = document.getElementById('ffIdReg').value.trim(); let teamName = null; let teammateFFIds = null; if (tournamentMode === 'duo' || tournamentMode === 'squad') { teamName = document.getElementById('teamNameReg').value.trim(); teammateFFIds = document.getElementById('teammateFFIdsReg').value.trim(); if (!teamName) { showNotification("Team Name is required for " + tournamentMode + " mode.", "error"); return; } } if (!playerName || !ffId) { showNotification("IGN and FF ID are required.", "error"); return; } if (!/^\d+$/.test(ffId)) { showNotification("Free Fire ID must be numeric.", "error"); return; } closeModal('registrationModal'); showNotification("Registering, please wait...", "info"); const registrationButton = document.getElementById('finalRegisterBtn'); if (registrationButton) registrationButton.disabled = true; const userProfileRef = db.collection('users').doc(currentUser.uid); const tournamentRef = db.collection('tournaments').doc(tournamentId); const entryFee = parseFloat(tournament.entryFee) || 0; try { await userProfileRef.set({ ign: playerName, ffId: ffId }, { merge: true }); await db.runTransaction(async (transaction) => { const tournamentDoc = await transaction.get(tournamentRef); const userDoc = await transaction.get(userProfileRef); if (!tournamentDoc.exists) throw new Error("Tournament not found."); if (!userDoc.exists) throw new Error("User profile not found."); const tournamentData = tournamentDoc.data(); const userData = userDoc.data(); if (tournamentData.status !== 'Upcoming') { throw new Error("Registration is closed for this tournament."); } if ((tournamentData.registeredPlayers || []).length >= tournamentData.maxPlayers) { throw new Error("Sorry, the tournament is full."); } if (tournamentData.registeredPlayers && tournamentData.registeredPlayers.some(p => p.userId === currentUser.uid)) { throw new Error("You are already registered."); } if (entryFee > 0) { const walletBalance = userData.walletBalance || 0; if (walletBalance < entryFee) { throw new Error(`Insufficient balance. You need ₹${entryFee.toFixed(2)} but have ₹${walletBalance.toFixed(2)}.`); } const newBalance = walletBalance - entryFee; transaction.update(userProfileRef, { walletBalance: newBalance }); const transRef = db.collection('transactions').doc(); transaction.set(transRef, { userId: currentUser.uid, type: 'debit', amount: entryFee, description: `Entry fee for: ${tournamentData.name}`, tournamentId: tournamentId, timestamp: firebase.firestore.FieldValue.serverTimestamp() }); } const registrationData = { userId: currentUser.uid, userEmail: currentUser.email, displayName: currentUser.displayName || playerName, ign: playerName, ffId: ffId, teamName: teamName, teammateFFIds: teammateFFIds, registeredAt: new Date(), paymentStatus: entryFee > 0 ? "Paid" : "NotApplicable" }; transaction.update(tournamentRef, { registeredPlayers: firebase.firestore.FieldValue.arrayUnion(registrationData) }); }); showNotification("Successfully registered for the tournament!", "success"); loadWalletBalance(); } catch (error) { showNotification(`Registration Error: ${error.message}`, "error"); console.error("Registration transaction error:", error); } finally { if (registrationButton) registrationButton.disabled = false; } }
+        async function loadMyRegistrations() { if(!currentUser)return; const listDiv=document.getElementById('myRegistrationsList'); if(!listDiv)return; listDiv.innerHTML='<div class="loading-spinner"></div>'; try{const myRegs=allTournamentsCache.filter(t=>t.registeredPlayers&&t.registeredPlayers.some(p=>p.userId===currentUser.uid)).sort((a,b)=>(b.dateTime?.toDate?b.dateTime.toDate():new Date(b.dateTime))-(a.dateTime?.toDate?a.dateTime.toDate():new Date(a.dateTime))); if(myRegs.length===0){listDiv.innerHTML="<p style='text-align:center;'>You haven't registered for any games yet.</p>";return;} listDiv.innerHTML=''; const gridContainer=document.createElement('div'); gridContainer.classList.add('tournament-grid'); myRegs.forEach(t=>{renderMyGameCard(t,gridContainer);}); listDiv.appendChild(gridContainer);}catch(e){console.error("My regs error:",e);listDiv.innerHTML="<p style='text-align:center;color:var(--danger-color);'>Could not load registered games.</p>";}}
+        function renderMyGameCard(t,container){ const card = document.createElement('div'); card.classList.add('tournament-card'); let status = t.status || 'Upcoming'; let statusText = status; let statusBadgeClass = `status-${status.toLowerCase()}`; if (status === 'Live') statusText = 'Live Now'; if (status === 'Complete') statusText = 'Completed'; const displayDateTime = t.dateTime ? new Date(t.dateTime.toDate ? t.dateTime.toDate() : t.dateTime).toLocaleString('en-IN', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }) : 'Date TBD'; const trophySVG = `<svg class="icon trophy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 0C20.2239 0 20 0.223858 20 0.5V2H17V0.5C17 0.223858 16.7761 0 16.5 0H7.5C7.22386 0 7 0.223858 7 0.5V2H4V0.5C4 0.223858 3.77614 0 3.5 0C3.22386 0 3 0.223858 3 0.5V2C1.34315 2 0 3.34315 0 5V10C0 10.5523 0.447715 11 1 11H1.58579L5.29289 14.7071C5.68342 15.0976 6.31658 15.0976 6.70711 14.7071L8 13.4142V22.5C8 22.7761 8.22386 23 8.5 23H15.5C15.7761 23 16 22.7761 16 22.5V13.4142L17.2929 14.7071C17.6834 15.0976 18.3166 15.0976 18.7071 14.7071L22.4142 11H23C23.5523 11 24 10.5523 24 10V5C24 3.34315 22.6569 2 21 2V0.5C21 0.223858 20.7761 0 20.5 0Z"/></svg>`; const calendarSVG = `<svg class="icon calendar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg>`; card.innerHTML = ` <div class="card-top-info"> <div class="card-tags"><span class="card-tag">${t.mode || 'N/A'}</span><span class="card-tag">${t.map || 'N/A'}</span></div> <span class="card-status-badge ${statusBadgeClass}">${statusText}</span> </div> <div class="card-main-info"> <div class="card-title">${trophySVG}<span>${t.name}</span></div> <div class="card-date">${calendarSVG}<span>${displayDateTime}</span></div> </div> <div class="card-actions my-game-actions">${generateMyGameActionButtons(t)}</div> `; container.appendChild(card); }
+        function generateMyGameActionButtons(t) { let h = ''; const status = t.status || 'Upcoming'; let idpbt = "ID/Pass will be available 30 minutes before the match starts "; let idpbd = true; let idpbo = ""; if (t.roomDetails && (status === "Live" || status === "Upcoming")) { const tS = t.dateTime?.toDate ? t.dateTime.toDate() : new Date(t.dateTime); const tmb = new Date(tS.getTime() - 30 * 60000); if (new Date() >= tmb) { idpbt = "Show ID/Pass"; idpbd = false; const srd = (t.roomDetails || "").replace(/'/g, "\\'").replace(/\n/g, '\\\\n'); idpbo = `showRoomDetails('${srd}')`; } } else if (status === "Complete") { idpbt = "Match Ended"; } h += `<button class="btn btn-id-pass ${idpbd ? 'btn-disabled-custom' : ''}" onclick="${idpbo}" ${idpbd ? 'disabled' : ''}>${idpbt}</button>`; if (status === "Complete") { h += `<button class="btn btn-view-result" onclick="viewTournamentResult('${t.id}')">View Result</button>`; } else { h += `<button class="btn" disabled style="visibility: hidden;">N/A</button>`; } return h; }
+        function showRoomDetails(d){alert(`Room Details:\n\n${d.replace(/\\\\n/g,'\n')}\n\n(Tap and hold to copy if needed)`);}
+        async function viewTournamentResult(tournamentId) { const resultModalContent = document.getElementById('viewResultContent'); const resultTournamentName = document.getElementById('viewResultTournamentName'); if(!resultModalContent || !resultTournamentName) return; const t = allTournamentsCache.find(t => t.id === tournamentId); if(!t) return showNotification("Tournament not found.", "error"); resultTournamentName.textContent = t.name; resultModalContent.innerHTML = '<div class="loading-spinner"></div>'; openModal('viewResultModal'); try { const leaderboardHtml = await getLeaderboardHtml(tournamentId); resultModalContent.innerHTML = leaderboardHtml; } catch (err) { resultModalContent.innerHTML = "<p>Could not load results. Please try again.</p>"; showNotification("Error loading results: " + err.message, "error"); } }
+        async function getLeaderboardHtml(tournamentId) { const td = await db.collection('tournaments').doc(tournamentId).get(); if(!td.exists) return "<p>Tournament data not found.</p>"; const d = td.data(); const le = []; if (d.registeredPlayers && d.registeredPlayers.length > 0) { d.registeredPlayers.forEach(p => { if (p.resultStatus === 'Verified') { le.push({ ign: p.ign || 'Player', kills: p.kills || 0, placement: p.placement || 'N/A' }); } }); if (le.length > 0) { le.sort((a, b) => a.placement - b.placement || b.kills - a.kills); let h = `<div class="table-responsive"><table class="data-table"><thead><tr><th>Rank</th><th>Player</th><th>Kills</th></tr></thead><tbody>`; le.forEach((e, i) => { h += `<tr><td>${i + 1}</td><td>${e.ign}</td><td>${e.kills}</td></tr>`; }); h += '</tbody></table></div>'; return h; } } return "<p style='text-align:center;'>No verified results are available yet.</p>"; }
+        const leaderboardTournamentSelect = document.getElementById('leaderboardTournamentSelect');
+        const leaderboardDisplay = document.getElementById('leaderboardDisplay');
+        function populateLeaderboardTournamentSelect(){if(!leaderboardTournamentSelect)return;const cv=leaderboardTournamentSelect.value;leaderboardTournamentSelect.innerHTML='<option value="">-- Select Tournament --</option>';allTournamentsCache.filter(t=>t.status==='Complete').sort((a,b)=>(b.dateTime?.toDate?b.dateTime.toDate():new Date(b.dateTime))-(a.dateTime?.toDate?a.dateTime.toDate():new Date(a.dateTime))).forEach(t=>{const o=document.createElement('option');o.value=t.id;o.textContent=t.name;leaderboardTournamentSelect.appendChild(o);});if(cv)leaderboardTournamentSelect.value=cv;if(leaderboardTournamentSelect.value)loadLeaderboardForSelectedTournament();else if(leaderboardDisplay)leaderboardDisplay.innerHTML="<p style='text-align:center;'>Select a tournament.</p>";}
+        async function loadLeaderboardForSelectedTournament(){if(!leaderboardDisplay||!leaderboardTournamentSelect)return;const tid=leaderboardTournamentSelect.value;if(!tid){leaderboardDisplay.innerHTML="<p style='text-align:center;'>Please select a tournament.</p>";return;}leaderboardDisplay.innerHTML='<div class="loading-spinner"></div>';try{ const leaderboardHtml = await getLeaderboardHtml(tid); leaderboardDisplay.innerHTML = leaderboardHtml; }catch(e){leaderboardDisplay.innerHTML="<p style='text-align:center;color:var(--danger-color);'>Error loading leaderboard.</p>";console.error("Leaderboard error:",e);}}
+        const walletBalanceSpan = document.getElementById('walletBalance');
+        const withdrawModalBalanceSpan = document.getElementById('withdrawModalBalance');
+        async function loadWalletBalance(){if(!currentUser)return;try{const d=await db.collection('users').doc(currentUser.uid).get();let b=0;if(d.exists&&d.data().walletBalance!==undefined)b=parseFloat(d.data().walletBalance);else if(d.exists&&d.data().walletBalance===undefined)await db.collection('users').doc(currentUser.uid).update({walletBalance:0});else if(!d.exists)await db.collection('users').doc(currentUser.uid).set({username:currentUser.displayName||currentUser.email.split('@')[0],email:currentUser.email,ffId:'',ign:'',createdAt:firebase.firestore.FieldValue.serverTimestamp(),walletBalance:0},{merge:true});if(walletBalanceSpan)walletBalanceSpan.textContent=`₹${b.toFixed(2)}`;if(withdrawModalBalanceSpan)withdrawModalBalanceSpan.textContent=`₹${b.toFixed(2)}`;if(headerWalletBalance)headerWalletBalance.textContent=`₹${b.toFixed(0)}`;if(document.getElementById('withdrawAmount'))document.getElementById('withdrawAmount').max=b.toFixed(2);}catch(e){console.error("Wallet balance error:",e);if(walletBalanceSpan)walletBalanceSpan.textContent=`₹Error`;if(withdrawModalBalanceSpan)withdrawModalBalanceSpan.textContent=`₹Error`;if(headerWalletBalance)headerWalletBalance.textContent=`₹Err`;}}
+        
+        // --- NEW FUNCTION TO LOAD TRANSACTION HISTORY ---
+        async function loadTransactionHistory() {
+            if (!currentUser) return;
+
+            const container = document.getElementById('transactionHistoryContainer');
+            const loader = document.getElementById('transactionHistoryLoader');
+            if (!container || !loader) return;
+
+            loader.style.display = 'block';
+            container.innerHTML = ''; // Clear previous content
+
+            try {
+                const querySnapshot = await db.collection('transactions')
+                    .where('userId', '==', currentUser.uid)
+                    .orderBy('timestamp', 'desc')
+                    .limit(50) // Limit to last 50 transactions to avoid loading too much data
+                    .get();
+
+                if (querySnapshot.empty) {
+                    container.innerHTML = "<p style='text-align:center; color: var(--text-color-muted);'>You have no transactions yet.</p>";
+                    loader.style.display = 'none';
+                    return;
+                }
+
+                let tableHTML = `
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                querySnapshot.forEach(doc => {
+                    const data = doc.data();
+                    const date = data.timestamp ? data.timestamp.toDate().toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' }) : 'N/A';
+                    const isCredit = data.type === 'credit';
+                    const amountClass = isCredit ? 'credit' : 'debit';
+                    const amountSign = isCredit ? '+' : '-';
+
+                    tableHTML += `
+                        <tr>
+                            <td>${date}</td>
+                            <td>${data.description || 'N/A'}</td>
+                            <td class="transaction-amount ${amountClass}">${amountSign} ₹${(data.amount || 0).toFixed(2)}</td>
+                        </tr>
+                    `;
+                });
+
+                tableHTML += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+                container.innerHTML = tableHTML;
+
+            } catch (error) {
+                console.error("Error loading transaction history:", error);
+                container.innerHTML = "<p style='text-align:center; color: var(--danger-color);'>Could not load transaction history.</p>";
+                showNotification("Error loading transactions.", "error");
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+
+
+        function openWithdrawModal(){ loadWalletBalance(); if(withdrawForm) withdrawForm.reset(); openModal('withdrawModal'); }
+        if (withdrawForm) { withdrawForm.addEventListener('submit', async (e) => { e.preventDefault(); const submitBtn = withdrawForm.querySelector('button[type="submit"]'); submitBtn.disabled = true; submitBtn.textContent = 'Submitting...'; try { if (!currentUser) { throw new Error("You must be logged in to make a request."); } const amount = parseFloat(document.getElementById('withdrawAmount').value); const method = document.getElementById('withdrawMethod').value.trim(); const currentBalance = parseFloat(withdrawModalBalanceSpan.textContent.replace('₹', '')); if (isNaN(amount) || amount <= 0) { throw new Error("Please enter a valid amount greater than zero."); } if (!method) { throw new Error("Please specify a withdrawal method (e.g., UPI ID)."); } if (amount > currentBalance) { throw new Error("Withdrawal amount cannot exceed your current balance."); } const withdrawalRequestData = { userId: currentUser.uid, userEmail: currentUser.email, displayName: currentUser.displayName || 'N/A', amount: amount, method: method, status: "Pending", requestedAt: firebase.firestore.FieldValue.serverTimestamp() }; await db.collection("withdrawalRequests").add(withdrawalRequestData); showNotification("Withdrawal request submitted successfully! It is now pending review.", "success"); closeModal('withdrawModal'); } catch (error) { showNotification(`Error: ${error.message}`, "error"); console.error("Withdrawal request error:", error); } finally { submitBtn.disabled = false; submitBtn.textContent = 'Request Withdrawal'; } }); }
+        const profileForm = document.getElementById('profileForm');
+        async function loadUserProfile() { if (!currentUser) return; try { const doc = await db.collection('users').doc(currentUser.uid).get(); if (doc.exists) { const d = doc.data(); if(document.getElementById('profileUsername'))document.getElementById('profileUsername').textContent = d.username || currentUser.displayName || 'N/A'; if(document.getElementById('profileEmail'))document.getElementById('profileEmail').textContent = currentUser.email; if(document.getElementById('profileFFID'))document.getElementById('profileFFID').textContent = d.ffId || 'N/A'; if(document.getElementById('profileIGN'))document.getElementById('profileIGN').textContent = d.ign || 'N/A'; if(document.getElementById('profileUsernameInput'))document.getElementById('profileUsernameInput').value = d.username || currentUser.displayName || ''; if(document.getElementById('profileFFIDInput'))document.getElementById('profileFFIDInput').value = d.ffId || ''; if(document.getElementById('profileIGNInput'))document.getElementById('profileIGNInput').value = d.ign || ''; } else { await db.collection('users').doc(currentUser.uid).set({ username: currentUser.displayName||currentUser.email.split('@')[0], email: currentUser.email, ffId:'', ign:'', createdAt: firebase.firestore.FieldValue.serverTimestamp(), walletBalance: 0 },{merge:true}); loadUserProfile();}} catch (e){ console.error("Profile load error:", e); showNotification("Profile load error: "+e.message, "error");}}
+        function openProfileModal() { openModal('profileModal');}
+        if(profileForm) profileForm.addEventListener('submit', async (e) => { e.preventDefault(); if(!currentUser) return; const u = document.getElementById('profileUsernameInput').value.trim(); const f = document.getElementById('profileFFIDInput').value.trim(); const i = document.getElementById('profileIGNInput').value.trim(); if(!u||!f||!i){showNotification("All fields required.", "error"); return;} if(!/^\d+$/.test(f)){showNotification("FF ID must be numeric.", "error"); return;} try {await db.collection('users').doc(currentUser.uid).update({username:u, ffId:f, ign:i, updatedAt:firebase.firestore.FieldValue.serverTimestamp()}); if(currentUser.displayName !== u) await currentUser.updateProfile({displayName:u}); showNotification("Profile Updated!", "success"); loadUserProfile(); if(welcomeText) welcomeText.textContent = `Welcome, ${u}`; closeModal('profileModal');} catch(err){showNotification("Profile update error: "+err.message,"error");}});
+        function openAddAmountModal() { if (!currentUser) { showNotification("Please login to add funds.", "info"); return; } if(addAmountForm) addAmountForm.reset(); openModal('addAmountModal'); }
+        if (addAmountForm) { addAmountForm.addEventListener('submit', async function(e) { e.preventDefault(); if (!currentUser) { showNotification("You need to be logged in.", "error"); return; } const amountPaid = document.getElementById('amountPaidInput').value; const transactionId = document.getElementById('transactionIdInput').value.trim(); if (!amountPaid || !transactionId ) { showNotification("Amount and Transaction ID are required.", "error"); return; } if (parseFloat(amountPaid) <= 0) { showNotification("Amount must be greater than zero.", "error"); return; } const submitBtn = document.getElementById('submitProofBtn'); submitBtn.disabled = true; submitBtn.textContent = 'Submitting...'; showNotification("Submitting proof, please wait...", "info"); try { const depositRequest = { userId: currentUser.uid, userEmail: currentUser.email, displayName: currentUser.displayName || 'N/A', amount: parseFloat(amountPaid), transactionId: transactionId, status: "Pending", requestedAt: firebase.firestore.FieldValue.serverTimestamp(), adminUpiPaidTo: document.getElementById('adminUpiIdDisplay') ? document.getElementById('adminUpiIdDisplay').textContent : 'N/A' }; await db.collection('depositRequests').add(depositRequest); showNotification("Payment proof submitted successfully! An admin will review your request.", "success"); closeModal('addAmountModal'); if(addAmountForm) addAmountForm.reset(); } catch (error) { console.error("Error submitting payment proof:", error); showNotification("Error submitting proof: " + error.message, "error"); } finally { submitBtn.disabled = false; submitBtn.textContent = 'Submit Proof'; } }); }
+        function openModal(modalId){const m=document.getElementById(modalId);if(m)m.style.display="flex";else console.error("Modal not found:",modalId);}
+        function closeModal(modalId){const m=document.getElementById(modalId);if(m)m.style.display="none";else console.error("Modal not found:",modalId);}
+        window.onclick=function(e){if(e.target.classList.contains('modal'))e.target.style.display="none";}
+        document.addEventListener('keydown',function(e){if(e.key==="Escape"){document.querySelectorAll('.modal').forEach(m=>{if(m.style.display==="flex"||m.style.display==="block")m.style.display="none";});}});
+        let notificationTimeout;function showNotification(msg,type="success"){clearTimeout(notificationTimeout);notificationDiv.textContent=msg;let bg;switch(type){case "success":bg="var(--success-color)";break;case "error":bg="var(--danger-color)";break;case "info":bg="var(--info-color)";break;case "warning":bg="var(--primary-color)";break;default:bg="var(--secondary-color)";}notificationDiv.style.backgroundColor=bg;notificationDiv.style.display="block";notificationTimeout=setTimeout(()=>{notificationDiv.style.display="none";},4000);}
+        function copyToClipboard(text, entityName = "Text") { if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(() => { showNotification(`${entityName} copied to clipboard!`, "success"); }).catch(err => { fallbackCopyTextToClipboard(text, entityName); }); } else { fallbackCopyTextToClipboard(text, entityName); } }
+        function fallbackCopyTextToClipboard(text, entityName) { const ta = document.createElement("textarea"); ta.value = text; ta.style.position="fixed"; ta.style.top="0";ta.style.left="0";ta.style.width="2em";ta.style.height="2em";ta.style.padding="0";ta.style.border="none";ta.style.outline="none";ta.style.boxShadow="none";ta.style.background="transparent"; document.body.appendChild(ta); ta.focus(); ta.select(); try { if(document.execCommand('copy')) showNotification(`${entityName} copied!`, "success"); else showNotification(`Failed to copy ${entityName}.`, "warning"); } catch (err) { showNotification(`Failed to copy ${entityName}.`, "warning");} document.body.removeChild(ta); }
+        function openPolicyModal(title, content) { const modalTitle = document.getElementById('policyModalTitle'); const modalContent = document.getElementById('policyModalContent'); if (modalTitle && modalContent) { modalTitle.textContent = title; modalContent.textContent = content; openModal('policyModal'); } }
+    </script>
+</body>
+</html>
