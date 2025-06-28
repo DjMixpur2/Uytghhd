@@ -128,20 +128,37 @@
         .my-game-actions .btn-view-result { background-color: var(--accent-yellow); color: var(--accent-yellow-text); }
         .my-game-actions .btn-view-result:hover:not(:disabled) { background-color: #eab308; }
         .my-game-actions .btn-disabled-custom, .my-game-actions .btn-id-pass[disabled] { background-color: var(--disabled-color) !important; color: var(--disabled-text-color) !important; cursor: not-allowed; opacity: 0.7; }
-        #walletSection { display: flex; flex-direction: column; gap: 25px; }
-        .wallet-balance-display-card { background-color: var(--card-background); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; display: flex; align-items: center; gap: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); text-align: left; }
-        .wallet-icon-area svg { width: 50px; height: 50px; fill: var(--accent-cyan); }
-        .wallet-info-area { display: flex; flex-direction: column; }
-        .wallet-label-main { font-size: 0.9em; color: var(--text-color-muted); margin-bottom: 4px; text-transform: uppercase; }
-        .wallet-amount-main { font-size: 2.2em; font-weight: 700; color: var(--accent-cyan); line-height: 1.2; }
-        .wallet-demo-text-main { font-size: 0.8em; color: var(--text-color-muted); font-style: italic; }
-        .wallet-actions-container { display: flex; gap: 15px; justify-content: center; }
-        .btn-wallet { flex-grow: 1; max-width: 220px; padding: 12px 20px; font-size: 1em; font-weight: 600; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: background-color 0.3s ease, transform 0.2s ease; }
-        .btn-wallet:hover { transform: translateY(-2px); }
-        .btn-withdraw { background-color: var(--danger-color); color: white; }
-        .btn-withdraw:hover { background-color: #c0392b; }
-        .btn-add-funds { background-color: var(--secondary-color); color: white; }
-        .btn-add-funds:hover { background-color: #3e8e41; }
+        #walletPage { padding: 15px 12px !important; background-color: var(--background-color); border: none; box-shadow: none;}
+        #walletPage > h2 { color: var(--text-color); font-size: 1.6em; font-weight: 600; margin-bottom: 20px; padding: 0; border: none; }
+        #walletSection { display: flex; flex-direction: column; gap: 20px; }
+        .balance-card { background-color: var(--card-background); border-radius: 12px; padding: 20px; position: relative; color: var(--text-color); border: 1px solid var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .balance-card-icon-placeholder { position: absolute; top: 20px; left: 20px; width: 50px; height: 35px; background-color: var(--accent-yellow); border-radius: 6px; }
+        .balance-card .copy-details-btn { position: absolute; top: 15px; right: 15px; background: transparent; border: none; cursor: pointer; color: var(--text-color-muted); padding: 5px; }
+        .balance-card .copy-details-btn svg { width: 22px; height: 22px; fill: currentColor; }
+        .balance-label { display: block; font-size: 0.9em; color: var(--text-color-muted); margin-top: 55px; margin-bottom: 5px; text-transform: uppercase; }
+        .balance-amount { display: block; font-size: 2.8em; font-weight: 700; color: var(--text-color); line-height: 1.1; }
+        .balance-user-id { display: block; margin-top: 15px; font-size: 1.1em; color: var(--text-color-muted); font-weight: 500; }
+        .wallet-action-buttons { display: flex; gap: 15px; }
+        .btn-wallet-action { flex-grow: 1; padding: 14px 20px; font-size: 1.1em; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; }
+        .btn-wallet-action:hover { opacity: 0.9; transform: translateY(-2px); }
+        .btn-wallet-action.add-funds { background-color: var(--success-color); color: white; }
+        .btn-wallet-action.withdraw { background-color: var(--danger-color); color: white; }
+        .recent-transactions { margin-top: 15px; }
+        .transactions-title { color: var(--text-color); font-size: 1.4em; font-weight: 600; margin-bottom: 15px; }
+        .transactions-list { display: flex; flex-direction: column; gap: 12px; }
+        .transaction-item { background-color: var(--card-background); border: 1px solid var(--border-color); border-radius: 10px; padding: 15px; display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+        .transaction-item-icon { flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .transaction-item-icon.credit { background-color: rgba(76, 175, 80, 0.15); }
+        .transaction-item-icon.debit { background-color: rgba(248, 81, 73, 0.15); }
+        .transaction-item-icon svg { width: 20px; height: 20px; }
+        .transaction-item-icon.credit svg { stroke: var(--success-color); }
+        .transaction-item-icon.debit svg { stroke: var(--danger-color); }
+        .transaction-details { flex-grow: 1; }
+        .transaction-description { font-size: 1em; font-weight: 500; color: var(--text-color); margin-bottom: 4px; }
+        .transaction-date { font-size: 0.85em; color: var(--text-color-muted); }
+        .transaction-item-amount { font-size: 1.1em; font-weight: 600; white-space: nowrap; }
+        .transaction-item-amount.credit { color: var(--success-color); }
+        .transaction-item-amount.debit { color: var(--danger-color); }
         .modal { display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.85); padding-top: 50px; padding-bottom: 50px;}
         .modal-content { background-color: var(--card-background); margin: 5% auto; padding: 25px 30px; border: 1px solid var(--border-color); width: 90%; max-width: 600px; border-radius: 10px; position: relative; box-shadow: 0 5px 25px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto;}
         .close-btn { color: #ccc; position: absolute; top: 15px; right: 20px; font-size: 32px; font-weight: bold; cursor: pointer; line-height: 1; transition: color 0.2s ease;}
@@ -156,8 +173,20 @@
         .submit-btn:disabled, #loginForm .login-button:disabled { background-color: var(--disabled-color) !important; color: var(--disabled-text-color) !important; cursor: not-allowed; transform: none;}
         .modal-subtitle { font-size: 0.9em; color: var(--text-color-muted); margin-bottom: 15px; text-align: center; }
         .payment-details-admin { background-color: var(--tag-bg); padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; border: 1px solid var(--border-color); }
+        
+        /* INCREASED QR CODE SIZE */
         .qr-code-container { margin-bottom: 10px; }
-        .qr-code-container img { max-width: 150px; height: auto; border-radius: 6px; border: 2px solid var(--border-color); }
+        .qr-code-container img { 
+            max-width: 240px; /* Increased size for better visibility */
+            height: auto; 
+            border-radius: 8px; 
+            border: 2px solid var(--border-color); 
+            display: inline-block; 
+        }
+        
+        .download-qr-btn { display: inline-flex; align-items: center; gap: 6px; background-color: var(--btn-details-bg); color: var(--text-color-muted); text-decoration: none; padding: 6px 12px; border-radius: 6px; font-size: 0.85em; font-weight: 500; margin-top: 5px; margin-bottom: 15px; transition: background-color 0.2s, color 0.2s; }
+        .download-qr-btn:hover { background-color: #30363D; color: var(--text-color); }
+        .download-qr-btn svg { width: 16px; height: 16px; stroke: currentColor; }
         .upi-id-container { font-size: 0.95em; color: var(--text-color-muted); }
         .upi-id-container strong { color: var(--text-color); font-weight: 600; margin: 0 5px; }
         .copy-btn { background: none; border: none; color: var(--info-color); cursor: pointer; padding: 2px 5px; vertical-align: middle; }
@@ -193,13 +222,12 @@
         .data-table th { background-color: #21262d; color: var(--text-color-muted); font-weight: 600; white-space: nowrap; }
         .data-table tr:nth-child(even) { background-color: #1a1f27; }
         .data-table tr:hover { background-color: #21262d; }
-        .transaction-history-section { border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 40px; }
-        .transaction-history-section h3 { color: var(--primary-color); font-size: 1.3em; margin-bottom: 15px; border: none; padding: 0; }
-        .data-table .transaction-amount.credit { color: var(--success-color); font-weight: 600; }
-        .data-table .transaction-amount.debit { color: var(--danger-color); font-weight: 600; }
         .user-nav-item { display: flex; }
-        @media (max-width: 768px) { header { padding: 10px 15px; min-height: 65px; } header h1#appHeaderText { font-size: 0.95em; max-width: 120px;} .welcome-text { font-size: 0.7em;} .app-logo { width: 40px; height: 40px;} .icon-btn svg { width: 20px; height: 20px;} .wallet-display { padding: 4px 8px; font-size: 0.8em; gap: 4px;} .wallet-display svg { width: 16px; height: 16px;} .logout-btn-header { padding: 5px 10px; font-size: 0.75em;} .tournament-grid { grid-template-columns: 1fr; } .tournament-card { padding: 12px; } .card-title { font-size: 1.15em; } .stat-value { font-size: 1em; } .modal-content { width: 90%; margin: 10% auto; padding: 20px; } .modal-content h2, .modal-content h3 { font-size: 1.5em; } .page-content h2 { font-size: 1.6em; } .submit-btn, #loginForm .login-button { padding: 10px 18px; font-size: 1em; } #notification { padding: 12px 20px; font-size: 0.9em; bottom: 80px; } .wallet-balance-display-card { padding: 20px; gap: 15px; } .wallet-icon-area svg { width: 40px; height: 40px; } .wallet-amount-main { font-size: 2em; } .wallet-actions-container { flex-direction: column; align-items: center; } .btn-wallet { width: 100%; max-width: 300px; } }
-        @media (max-width: 480px) { header { padding: 8px 12px; min-height: 60px; gap: 8px; } .header-left { gap: 10px; } header h1#appHeaderText { font-size: 1em; max-width: 100px; } .app-logo { width: 38px; height: 38px; border-width: 1.5px;} .header-right { gap: 8px; } .wallet-display { padding: 5px 8px; font-size: 0.8em; gap: 4px; border-width: 1px;} .wallet-display svg { width: 16px; height: 16px;} .logout-btn-header { display: none; } .page-content { padding: 15px; } .page-content h2 { font-size: 1.4em;} .tournament-card { padding: 10px; } .card-top-info { font-size: 0.75em; } .card-tag, .card-status-badge { padding: 3px 8px; font-size: 0.85em; } .card-title { font-size: 1.1em; } .card-date { font-size: 0.8em; } .stat-label { font-size: 0.7em;} .stat-value { font-size: 0.95em; } .card-actions .btn { font-size: 0.85em; padding: 8px 10px; } .modal-content { width: 95%; padding: 15px; margin: 5% auto; } .modal-content h2, .modal-content h3 { font-size: 1.3em;} .close-btn { font-size: 28px; top: 10px; right: 15px;} .submit-btn, #loginForm .login-button { font-size: 0.95em; padding: 10px 15px; } #notification { width: 90%; font-size: 0.85em; padding: 10px 15px; bottom: 75px; } .data-table { font-size: 0.8em;} .wallet-balance-display-card { flex-direction: column; align-items: center; text-align: center; padding: 15px; } .wallet-info-area { align-items: center; } .wallet-amount-main { font-size: 1.8em; } .btn-wallet { font-size: 0.95em; padding: 10px 15px; } .transaction-history-section h3 { font-size: 1.3em; } .payment-details-admin { padding: 10px; } .qr-code-container img { max-width: 120px; } .modal-subtitle { font-size: 0.85em; } #addAmountModal .modal-content h2 { font-size: 1.5em; } }
+        @media (max-width: 768px) { header { padding: 10px 15px; min-height: 65px; } header h1#appHeaderText { font-size: 0.95em; max-width: 120px;} .welcome-text { font-size: 0.7em;} .app-logo { width: 40px; height: 40px;} .icon-btn svg { width: 20px; height: 20px;} .wallet-display { padding: 4px 8px; font-size: 0.8em; gap: 4px;} .wallet-display svg { width: 16px; height: 16px;} .logout-btn-header { padding: 5px 10px; font-size: 0.75em;} .tournament-grid { grid-template-columns: 1fr; } .tournament-card { padding: 12px; } .card-title { font-size: 1.15em; } .stat-value { font-size: 1em; } .modal-content { width: 90%; margin: 10% auto; padding: 20px; } .modal-content h2, .modal-content h3 { font-size: 1.5em; } .page-content h2 { font-size: 1.6em; } .submit-btn, #loginForm .login-button { padding: 10px 18px; font-size: 1em; } #notification { padding: 12px 20px; font-size: 0.9em; bottom: 80px; } .balance-amount { font-size: 2.5em; } .btn-wallet-action { flex-direction: column; align-items: center; } .btn-wallet { width: 100%; max-width: 300px; } }
+        @media (max-width: 480px) { header { padding: 8px 12px; min-height: 60px; gap: 8px; } .header-left { gap: 10px; } header h1#appHeaderText { font-size: 1em; max-width: 100px; } .app-logo { width: 38px; height: 38px; border-width: 1.5px;} .header-right { gap: 8px; } .wallet-display { padding: 5px 8px; font-size: 0.8em; gap: 4px; border-width: 1px;} .wallet-display svg { width: 16px; height: 16px;} .logout-btn-header { display: none; } .page-content { padding: 15px; } .page-content h2 { font-size: 1.4em;} .tournament-card { padding: 10px; } .card-top-info { font-size: 0.75em; } .card-tag, .card-status-badge { padding: 3px 8px; font-size: 0.85em; } .card-title { font-size: 1.1em; } .card-date { font-size: 0.8em; } .stat-label { font-size: 0.7em;} .stat-value { font-size: 0.95em; } .card-actions .btn { font-size: 0.85em; padding: 8px 10px; } .modal-content { width: 95%; padding: 15px; margin: 5% auto; } .modal-content h2, .modal-content h3 { font-size: 1.3em;} .close-btn { font-size: 28px; top: 10px; right: 15px;} .submit-btn, #loginForm .login-button { font-size: 0.95em; padding: 10px 15px; } #notification { width: 90%; font-size: 0.85em; padding: 10px 15px; bottom: 75px; } .data-table { font-size: 0.8em;} .balance-amount { font-size: 2.2em; } .btn-wallet-action { font-size: 1em; padding: 12px 15px; } .transactions-title { font-size: 1.3em; } 
+        /* INCREASED QR CODE SIZE FOR MOBILE */
+        .qr-code-container img { max-width: 200px; } 
+        .modal-subtitle { font-size: 0.85em; } #addAmountModal .modal-content h2 { font-size: 1.5em; } }
     </style>
 </head>
 <body>
@@ -298,25 +326,27 @@
             <div id="myRegistrationsPage" class="page-content"><h2>My Registered Games</h2><div id="myRegistrationsList"><p style='text-align:center;'>You haven't registered for any games yet.</p></div></div>
             <div id="leaderboardPage" class="page-content"><h2>Leaderboard</h2><div class="form-group"><label for="leaderboardTournamentSelect">Select Tournament:</label><select id="leaderboardTournamentSelect" onchange="loadLeaderboardForSelectedTournament()"></select></div><div id="leaderboardDisplay"><p>Select a tournament to view its leaderboard.</p></div></div>
             <div id="walletPage" class="page-content">
-                <h2>My Wallet</h2>
+                <h2 class="wallet-main-title">My Wallet</h2>
                 <div id="walletSection">
-                    <div class="wallet-balance-display-card">
-                        <div class="wallet-icon-area">
-                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="var(--accent-cyan)"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2zM4 18V6h16v12H4zm10-8H8v6h6v-2h2v-2h-2V8zm-2 0h-2v2h2V8z"/></svg>
-                        </div>
-                        <div class="wallet-info-area">
-                            <span class="wallet-label-main">Current Balance</span>
-                            <span id="walletBalance" class="wallet-amount-main">₹0.00</span>
-                        </div>
+                    <div class="balance-card">
+                        <div class="balance-card-icon-placeholder"></div>
+                        <button class="copy-details-btn" onclick="copyToClipboard(document.getElementById('walletUserID').textContent, 'Username/IGN')">
+                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                        </button>
+                        <span class="balance-label">CURRENT BALANCE</span>
+                        <span class="balance-amount" id="walletBalance">₹0.00</span>
+                        <span class="balance-user-id" id="walletUserID">...</span>
                     </div>
-                    <div class="wallet-actions-container">
-                        <button class="btn btn-wallet btn-withdraw" onclick="openWithdrawModal()"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l-7-7 7-7"/><path d="M19 12H5"/></svg> Withdraw Funds</button>
-                        <button class="btn btn-wallet btn-add-funds" onclick="openAddAmountModal()"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Add Funds</button>
+                    <div class="wallet-action-buttons">
+                        <button class="btn-wallet-action add-funds" onclick="openAddAmountModal()">Add Funds</button>
+                        <button class="btn-wallet-action withdraw" onclick="openWithdrawModal()">Withdraw</button>
                     </div>
-                    <div class="transaction-history-section">
-                        <h3>Transaction History</h3>
+                    <div class="recent-transactions">
+                        <h3 class="transactions-title">Recent Transactions</h3>
                         <div id="transactionHistoryLoader" class="loading-spinner" style="display: none;"></div>
-                        <div id="transactionHistoryContainer"><p style="text-align:center; color: var(--text-color-muted);">You have no transactions yet.</p></div>
+                        <div id="transactionHistoryContainer" class="transactions-list">
+                            <p style="text-align:center; color: var(--text-color-muted);">You have no transactions yet.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -330,7 +360,45 @@
     <div id="viewResultModal" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeModal('viewResultModal')">×</span><h3>Results: <span id="viewResultTournamentName"></span></h3><div id="viewResultContent"><p>Loading results...</p></div></div></div>
     <div id="policyModal" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeModal('policyModal')">×</span><h2 id="policyModalTitle">Policy</h2><div id="policyModalContent" style="white-space: pre-wrap; color: var(--text-color-muted); line-height: 1.7;"><p>Policy content will be loaded here.</p></div></div></div>
     <div id="withdrawModal" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeModal('withdrawModal')">×</span><h2>Withdraw Funds</h2><form id="withdrawForm"><p>Current Balance: <span id="withdrawModalBalance">₹0.00</span></p><div class="form-group"><label for="withdrawAmount">Amount to Withdraw (₹):</label><input type="number" id="withdrawAmount" placeholder="e.g., 50" min="1" required></div><div class="form-group"><label for="withdrawMethod">Withdrawal Method (e.g., UPI ID, Bank Details):</label><input type="text" id="withdrawMethod" placeholder="your-upi-id@okhdfc" required></div><button type="submit" class="submit-btn">Request Withdrawal</button></form></div></div>
-    <div id="addAmountModal" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeModal('addAmountModal')">×</span><h2>Add Amount</h2><p class="modal-subtitle">Pay to the UPI ID / Scan QR below, then submit details:</p><div class="payment-details-admin"><div class="qr-code-container"><img src="YOUR_QR_CODE_IMAGE_URL_HERE" alt="Admin UPI QR Code" id="adminQrCodeImage"></div><div class="upi-id-container"><span>Admin UPI:</span><strong id="adminUpiIdDisplay">yourupi@bank</strong><button class="copy-btn" onclick="copyToClipboard(document.getElementById('adminUpiIdDisplay').textContent, 'Admin UPI ID')" aria-label="Copy UPI ID"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button></div></div><form id="addAmountForm"><div class="form-group"><label for="amountPaidInput">Amount Paid (₹):</label><input type="number" id="amountPaidInput" placeholder="e.g., 100" min="1" required></div><div class="form-group"><label for="transactionIdInput">Transaction ID / UTR No.:</label><input type="text" id="transactionIdInput" placeholder="Enter unique transaction ID" required></div><div class="form-info-note"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--info-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg><span>Your request will be reviewed by an admin. Balance will be updated upon approval (usually within a few hours).</span></div><button type="submit" class="submit-btn" id="submitProofBtn">Submit Proof</button></form></div></div>
+    <div id="addAmountModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('addAmountModal')">×</span>
+            <h2>Add Amount</h2>
+            <p class="modal-subtitle">Pay to the UPI ID / Scan QR below, then submit details:</p>
+            <div class="payment-details-admin">
+                <div class="qr-code-container">
+                    <img src="YOUR_QR_CODE_IMAGE_URL_HERE" alt="Admin UPI QR Code" id="adminQrCodeImage">
+                </div>
+                <a href="#" id="downloadQrLink" class="download-qr-btn" download="payment-qr.png" title="Download QR Code" style="display:none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    <span>Download QR</span>
+                </a>
+                <div class="upi-id-container">
+                    <span>Admin UPI:</span>
+                    <strong id="adminUpiIdDisplay">yourupi@bank</strong>
+                    <button class="copy-btn" onclick="copyToClipboard(document.getElementById('adminUpiIdDisplay').textContent, 'Admin UPI ID')" aria-label="Copy UPI ID">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </button>
+                </div>
+            </div>
+            <form id="addAmountForm">
+                <div class="form-group">
+                    <label for="amountPaidInput">Amount Paid (₹):</label>
+                    <input type="number" id="amountPaidInput" placeholder="e.g., 100" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="transactionIdInput">Transaction ID / UTR No.:</label>
+                    <input type="text" id="transactionIdInput" placeholder="Enter unique transaction ID" required>
+                </div>
+                <div class="form-info-note">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--info-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    <span>Your request will be reviewed by an admin. Balance will be updated upon approval (usually within a few hours).</span>
+                </div>
+                <button type="submit" class="submit-btn" id="submitProofBtn">Submit Proof</button>
+            </form>
+        </div>
+    </div>
+
     <div id="notification"></div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -384,7 +452,54 @@
         
         // --- ALL FUNCTIONS ARE DEFINED HERE ---
         
-        document.addEventListener('DOMContentLoaded', () => { if (appLogoImage) { appLogoImage.src = 'https://i.ibb.co/d0QmM7f5/20250627-232113-11zon.jpg'; appLogoImage.onerror = () => { if(appLogoImage) appLogoImage.style.display = 'none'; }; } db.collection('appSettings').doc('paymentInfo').get().then(doc => { const adminUpiIdElement = document.getElementById('adminUpiIdDisplay'); const adminQrCodeImageElement = document.getElementById('adminQrCodeImage'); const copyBtnElement = document.querySelector('#addAmountModal .copy-btn'); const defaultAdminUpi = 'yourupi@bank'; const defaultQrUrl = 'YOUR_QR_CODE_IMAGE_URL_HERE'; let upiToUse = defaultAdminUpi; let qrToUse = defaultQrUrl; if (doc.exists) { const data = doc.data(); upiToUse = data.adminUpiId || defaultAdminUpi; qrToUse = data.adminQrCodeUrl || defaultQrUrl; } if(adminUpiIdElement) adminUpiIdElement.textContent = upiToUse; if(adminQrCodeImageElement) { if (qrToUse && qrToUse !== 'YOUR_QR_CODE_IMAGE_URL_HERE') { adminQrCodeImageElement.src = qrToUse; adminQrCodeImageElement.style.display = 'block'; const existingMessage = adminQrCodeImageElement.parentElement.querySelector('.qr-unavailable-text'); if (existingMessage) existingMessage.remove(); } else { adminQrCodeImageElement.alt = "QR Code not available"; adminQrCodeImageElement.style.display = 'none'; const qrContainer = adminQrCodeImageElement.parentElement; if (qrContainer && !qrContainer.querySelector('.qr-unavailable-text')) { const p = document.createElement('p'); p.textContent = "Admin QR code not set up."; p.classList.add('qr-unavailable-text'); p.style.color='var(--text-color-muted)'; p.style.fontSize = '0.8em'; qrContainer.appendChild(p);}} } if(copyBtnElement && adminUpiIdElement) copyBtnElement.setAttribute('onclick', `copyToClipboard('${upiToUse}', 'Admin UPI ID')`); }).catch(err => { console.warn("Could not fetch admin payment settings, using defaults:", err); }); updateAuthFormUI(); });
+        document.addEventListener('DOMContentLoaded', () => { 
+            if (appLogoImage) { 
+                appLogoImage.src = 'https://i.ibb.co/d0QmM7f5/20250627-232113-11zon.jpg'; 
+                appLogoImage.onerror = () => { if(appLogoImage) appLogoImage.style.display = 'none'; }; 
+            } 
+            db.collection('appSettings').doc('paymentInfo').get().then(doc => { 
+                const adminUpiIdElement = document.getElementById('adminUpiIdDisplay'); 
+                const adminQrCodeImageElement = document.getElementById('adminQrCodeImage'); 
+                const downloadQrLinkElement = document.getElementById('downloadQrLink');
+                const copyBtnElement = document.querySelector('#addAmountModal .copy-btn'); 
+                const defaultAdminUpi = 'yourupi@bank'; 
+                const defaultQrUrl = 'YOUR_QR_CODE_IMAGE_URL_HERE'; 
+                let upiToUse = defaultAdminUpi; 
+                let qrToUse = defaultQrUrl; 
+                if (doc.exists) { 
+                    const data = doc.data(); 
+                    upiToUse = data.adminUpiId || defaultAdminUpi; 
+                    qrToUse = data.adminQrCodeUrl || defaultQrUrl; 
+                } 
+                if(adminUpiIdElement) adminUpiIdElement.textContent = upiToUse; 
+                if(adminQrCodeImageElement) { 
+                    if (qrToUse && qrToUse !== 'YOUR_QR_CODE_IMAGE_URL_HERE') { 
+                        adminQrCodeImageElement.src = qrToUse; 
+                        adminQrCodeImageElement.style.display = 'inline-block';
+                        if (downloadQrLinkElement) {
+                            downloadQrLinkElement.href = qrToUse;
+                            downloadQrLinkElement.style.display = 'inline-flex';
+                        }
+                        const existingMessage = adminQrCodeImageElement.parentElement.querySelector('.qr-unavailable-text'); 
+                        if (existingMessage) existingMessage.remove(); 
+                    } else { 
+                        adminQrCodeImageElement.alt = "QR Code not available"; 
+                        adminQrCodeImageElement.style.display = 'none'; 
+                        if (downloadQrLinkElement) downloadQrLinkElement.style.display = 'none';
+                        const qrContainer = adminQrCodeImageElement.parentElement; 
+                        if (qrContainer && !qrContainer.querySelector('.qr-unavailable-text')) { 
+                            const p = document.createElement('p'); 
+                            p.textContent = "Admin QR code not set up."; 
+                            p.classList.add('qr-unavailable-text'); 
+                            p.style.color='var(--text-color-muted)'; 
+                            p.style.fontSize = '0.8em'; qrContainer.appendChild(p);
+                        }
+                    } 
+                } 
+                if(copyBtnElement && adminUpiIdElement) copyBtnElement.setAttribute('onclick', `copyToClipboard('${upiToUse}', 'Admin UPI ID')`); 
+            }).catch(err => { console.warn("Could not fetch admin payment settings, using defaults:", err); }); 
+            updateAuthFormUI(); 
+        });
         appNavigation.addEventListener('click', (e) => { const button = e.target.closest('button'); if (button && button.dataset.page) { navigateToPage(button.dataset.page); } });
         loginForm.addEventListener('submit', (e) => { e.preventDefault(); const email = emailInput.value; const password = passwordInput.value; authButton.disabled = true; authButton.textContent = isSignUpMode ? 'Signing Up...' : 'Logging In...'; if (isSignUpMode) { const username = usernameInput.value.trim(); if (!username) { showNotification("Username is required.", "error"); authButton.disabled = false; authButton.textContent = 'Sign Up'; return; } if (password.length < 6) { showNotification("Password min 6 chars.", "error"); authButton.disabled = false; authButton.textContent = 'Sign Up'; return; } auth.createUserWithEmailAndPassword(email, password) .then(uc => uc.user.updateProfile({ displayName: username }).then(() => db.collection('users').doc(uc.user.uid).set({ username: username, email: uc.user.email, ffId: '', ign: '', createdAt: firebase.firestore.FieldValue.serverTimestamp(), walletBalance: 0 }, { merge: true }))) .then(() => showNotification("Sign up successful!", "success")) .catch(err => showNotification(`Sign Up Error: ${err.message}`, "error")) .finally(() => { authButton.disabled = false; authButton.textContent = 'Sign Up';}); } else { auth.signInWithEmailAndPassword(email, password) .then(() => showNotification("Login successful!", "success")) .catch(err => showNotification(`Login Error: ${err.message}`, "error")) .finally(() => { authButton.disabled = false; authButton.textContent = 'Login';}); } });
         toggleAuthModeLink.addEventListener('click', () => { isSignUpMode = !isSignUpMode; updateAuthFormUI(); loginForm.style.display = 'block'; forgotPasswordForm.style.display = 'none'; if(passwordGroup) passwordGroup.style.display = 'block'; });
@@ -393,7 +508,7 @@
         if (backToLoginLink) { backToLoginLink.addEventListener('click', () => { forgotPasswordForm.style.display = 'none'; loginForm.style.display = 'block'; isSignUpMode = false; updateAuthFormUI(); });}
         if (forgotPasswordForm) { forgotPasswordForm.addEventListener('submit', (e) => { e.preventDefault(); const email = resetEmailInput.value; if (!email) { showNotification("Please enter your email.", "error"); return; } const forgotPassButton = forgotPasswordForm.querySelector('button[type="submit"]'); forgotPassButton.disabled = true; forgotPassButton.textContent = "Sending..."; auth.sendPasswordResetEmail(email) .then(() => { showNotification("Password reset email sent!", "success"); forgotPasswordForm.style.display = 'none'; loginForm.style.display = 'block'; isSignUpMode = false; updateAuthFormUI(); if(resetEmailInput) resetEmailInput.value = ''; }) .catch((error) => { showNotification(`Error: ${error.message}`, "error"); }) .finally(() => { forgotPassButton.disabled = false; forgotPassButton.textContent = "Send Reset Link"; }); });}
         
-        auth.onAuthStateChanged(async user => { if (user) { currentUser = user; initializeOneSignalForUser(user.uid); if(welcomeText) welcomeText.textContent = `Welcome, ${user.displayName || user.email.split('@')[0]}`; if(appHeaderText) appHeaderText.textContent = "BattleGame"; if(logoutBtnHeader) logoutBtnHeader.style.display = 'inline-block'; if(walletHeaderBtn) walletHeaderBtn.style.display = 'flex'; loginPageContainer.style.display = 'none'; mainAppContentDiv.style.display = 'block'; document.querySelectorAll('.user-nav-item').forEach(item => { if(item.dataset.page==='myProfilePage'||item.dataset.page==='myRegistrationsPage'||item.dataset.page==='walletPage') { item.style.display='flex'; }}); await loadUserProfile(); fetchTournaments(); loadWalletBalance(); navigateToPage('tournamentsPage'); loginForm.style.display = 'block'; forgotPasswordForm.style.display = 'none'; updateAuthFormUI(); } else { currentUser = null; if(welcomeText) welcomeText.textContent = "Welcome"; if(appHeaderText) appHeaderText.textContent = "Tournament Hub"; if(logoutBtnHeader) logoutBtnHeader.style.display = 'none'; if(walletHeaderBtn) walletHeaderBtn.style.display = 'none'; if(headerWalletBalance) headerWalletBalance.textContent = '₹0'; loginPageContainer.style.display = 'flex'; mainAppContentDiv.style.display = 'none'; document.querySelectorAll('.user-nav-item').forEach(item => { if (item.dataset.page==='myProfilePage'||item.dataset.page==='myRegistrationsPage'||item.dataset.page==='walletPage') item.style.display='none'; }); if(tournamentGrid) tournamentGrid.innerHTML = ''; allTournamentsCache = []; loginForm.style.display = 'block'; forgotPasswordForm.style.display = 'none'; isSignUpMode = false; updateAuthFormUI(); emailInput.value = ''; passwordInput.value = ''; usernameInput.value = ''; } });
+        auth.onAuthStateChanged(async user => { if (user) { currentUser = user; initializeOneSignalForUser(user.uid); if(welcomeText) welcomeText.textContent = `Welcome, ${user.displayName || user.email.split('@')[0]}`; if(appHeaderText) appHeaderText.textContent = "Game Battle"; if(logoutBtnHeader) logoutBtnHeader.style.display = 'inline-block'; if(walletHeaderBtn) walletHeaderBtn.style.display = 'flex'; loginPageContainer.style.display = 'none'; mainAppContentDiv.style.display = 'block'; document.querySelectorAll('.user-nav-item').forEach(item => { if(item.dataset.page==='myProfilePage'||item.dataset.page==='myRegistrationsPage'||item.dataset.page==='walletPage') { item.style.display='flex'; }}); await loadUserProfile(); fetchTournaments(); loadWalletBalance(); navigateToPage('tournamentsPage'); loginForm.style.display = 'block'; forgotPasswordForm.style.display = 'none'; updateAuthFormUI(); } else { currentUser = null; if(welcomeText) welcomeText.textContent = "Welcome"; if(appHeaderText) appHeaderText.textContent = "Tournament Hub"; if(logoutBtnHeader) logoutBtnHeader.style.display = 'none'; if(walletHeaderBtn) walletHeaderBtn.style.display = 'none'; if(headerWalletBalance) headerWalletBalance.textContent = '₹0'; loginPageContainer.style.display = 'flex'; mainAppContentDiv.style.display = 'none'; document.querySelectorAll('.user-nav-item').forEach(item => { if (item.dataset.page==='myProfilePage'||item.dataset.page==='myRegistrationsPage'||item.dataset.page==='walletPage') item.style.display='none'; }); if(tournamentGrid) tournamentGrid.innerHTML = ''; allTournamentsCache = []; loginForm.style.display = 'block'; forgotPasswordForm.style.display = 'none'; isSignUpMode = false; updateAuthFormUI(); emailInput.value = ''; passwordInput.value = ''; usernameInput.value = ''; } });
         
         function updateAuthFormUI() { if (isSignUpMode) { formTitle.textContent = "Sign Up"; authButton.textContent = "Sign Up"; if(usernameGroup) usernameGroup.style.display = "block"; if(usernameInput) usernameInput.required = true; if(passwordGroup) passwordGroup.style.display = 'block'; if(passwordInput) passwordInput.required = true; toggleAuthModeLink.textContent = "Login"; if(forgotPasswordLink) forgotPasswordLink.style.display = 'block'; } else { formTitle.textContent = "Login"; authButton.textContent = "Login"; if(usernameGroup) usernameGroup.style.display = "none"; if(usernameInput) usernameInput.required = false; if(passwordGroup) passwordGroup.style.display = 'block'; if(passwordInput) passwordInput.required = true; toggleAuthModeLink.textContent = "Sign Up"; if(forgotPasswordLink) forgotPasswordLink.style.display = 'block'; } }
         function navigateToPage(pageId) { showPage(pageId); appNavigation.querySelectorAll('button').forEach(btn => btn.classList.remove('active')); const navButton = appNavigation.querySelector(`button[data-page="${pageId}"]`); if(navButton) navButton.classList.add('active');}
@@ -419,11 +534,11 @@
         const walletBalanceSpan = document.getElementById('walletBalance');
         const withdrawModalBalanceSpan = document.getElementById('withdrawModalBalance');
         async function loadWalletBalance(){if(!currentUser)return;try{const d=await db.collection('users').doc(currentUser.uid).get();let b=0;if(d.exists&&d.data().walletBalance!==undefined)b=parseFloat(d.data().walletBalance);else if(d.exists&&d.data().walletBalance===undefined)await db.collection('users').doc(currentUser.uid).update({walletBalance:0});else if(!d.exists)await db.collection('users').doc(currentUser.uid).set({username:currentUser.displayName||currentUser.email.split('@')[0],email:currentUser.email,ffId:'',ign:'',createdAt:firebase.firestore.FieldValue.serverTimestamp(),walletBalance:0},{merge:true});if(walletBalanceSpan)walletBalanceSpan.textContent=`₹${b.toFixed(2)}`;if(withdrawModalBalanceSpan)withdrawModalBalanceSpan.textContent=`₹${b.toFixed(2)}`;if(headerWalletBalance)headerWalletBalance.textContent=`₹${b.toFixed(0)}`;if(document.getElementById('withdrawAmount'))document.getElementById('withdrawAmount').max=b.toFixed(2);}catch(e){console.error("Wallet balance error:",e);if(walletBalanceSpan)walletBalanceSpan.textContent=`₹Error`;if(withdrawModalBalanceSpan)withdrawModalBalanceSpan.textContent=`₹Error`;if(headerWalletBalance)headerWalletBalance.textContent=`₹Err`;}}
-        async function loadTransactionHistory() { if (!currentUser) return; const container = document.getElementById('transactionHistoryContainer'); const loader = document.getElementById('transactionHistoryLoader'); if (!container || !loader) return; loader.style.display = 'block'; container.innerHTML = ''; try { const querySnapshot = await db.collection('transactions').where('userId', '==', currentUser.uid).orderBy('timestamp', 'desc').limit(50).get(); if (querySnapshot.empty) { container.innerHTML = "<p style='text-align:center; color: var(--text-color-muted);'>You have no transactions yet.</p>"; loader.style.display = 'none'; return; } let tableHTML = `<div class="table-responsive"><table class="data-table"><thead><tr><th>Date</th><th>Description</th><th>Amount</th></tr></thead><tbody>`; querySnapshot.forEach(doc => { const data = doc.data(); const date = data.timestamp ? data.timestamp.toDate().toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' }) : 'N/A'; const isCredit = data.type === 'credit'; const amountClass = isCredit ? 'credit' : 'debit'; const amountSign = isCredit ? '+' : '-'; tableHTML += `<tr><td>${date}</td><td>${data.description || 'N/A'}</td><td class="transaction-amount ${amountClass}">${amountSign} ₹${(data.amount || 0).toFixed(2)}</td></tr>`; }); tableHTML += `</tbody></table></div>`; container.innerHTML = tableHTML; } catch (error) { console.error("Error loading transaction history:", error); container.innerHTML = "<p style='text-align:center; color: var(--danger-color);'>Could not load transaction history.</p>"; showNotification("Error loading transactions.", "error"); } finally { loader.style.display = 'none'; } }
+        async function loadTransactionHistory() { if (!currentUser) return; const container = document.getElementById('transactionHistoryContainer'); const loader = document.getElementById('transactionHistoryLoader'); if (!container || !loader) return; loader.style.display = 'block'; container.innerHTML = ''; try { const querySnapshot = await db.collection('transactions').where('userId', '==', currentUser.uid).orderBy('timestamp', 'desc').limit(20).get(); if (querySnapshot.empty) { container.innerHTML = "<p style='text-align:center; color: var(--text-color-muted);'>You have no recent transactions.</p>"; return; } const upArrowSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>`; const downArrowSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>`; let listHTML = ''; querySnapshot.forEach(doc => { const data = doc.data(); const date = data.timestamp ? data.timestamp.toDate().toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A'; const isCredit = data.type === 'credit'; const amountClass = isCredit ? 'credit' : 'debit'; const amountSign = isCredit ? '+' : '-'; const iconSVG = isCredit ? upArrowSVG : downArrowSVG; let description = data.description || 'N/A'; listHTML += ` <div class="transaction-item"> <div class="transaction-item-icon ${amountClass}">${iconSVG}</div> <div class="transaction-details"> <div class="transaction-description">${description}</div> <div class="transaction-date">${date}</div> </div> <div class="transaction-item-amount ${amountClass}"> ${amountSign}₹${(data.amount || 0).toFixed(2)} </div> </div> `; }); container.innerHTML = listHTML; } catch (error) { console.error("Error loading transaction history:", error); container.innerHTML = "<p style='text-align:center; color: var(--danger-color);'>Could not load transaction history.</p>"; showNotification("Error loading transactions.", "error"); } finally { loader.style.display = 'none'; } }
         function openWithdrawModal(){ loadWalletBalance(); if(withdrawForm) withdrawForm.reset(); openModal('withdrawModal'); }
         if (withdrawForm) { withdrawForm.addEventListener('submit', async (e) => { e.preventDefault(); const submitBtn = withdrawForm.querySelector('button[type="submit"]'); submitBtn.disabled = true; submitBtn.textContent = 'Submitting...'; try { if (!currentUser) { throw new Error("You must be logged in to make a request."); } const amount = parseFloat(document.getElementById('withdrawAmount').value); const method = document.getElementById('withdrawMethod').value.trim(); const currentBalance = parseFloat(withdrawModalBalanceSpan.textContent.replace('₹', '')); if (isNaN(amount) || amount <= 0) { throw new Error("Please enter a valid amount greater than zero."); } if (!method) { throw new Error("Please specify a withdrawal method (e.g., UPI ID)."); } if (amount > currentBalance) { throw new Error("Withdrawal amount cannot exceed your current balance."); } const withdrawalRequestData = { userId: currentUser.uid, userEmail: currentUser.email, displayName: currentUser.displayName || 'N/A', amount: amount, method: method, status: "Pending", requestedAt: firebase.firestore.FieldValue.serverTimestamp() }; await db.collection("withdrawalRequests").add(withdrawalRequestData); showNotification("Withdrawal request submitted successfully! It is now pending review.", "success"); closeModal('withdrawModal'); } catch (error) { showNotification(`Error: ${error.message}`, "error"); console.error("Withdrawal request error:", error); } finally { submitBtn.disabled = false; submitBtn.textContent = 'Request Withdrawal'; } }); }
         const profileForm = document.getElementById('profileForm');
-        async function loadUserProfile() { if (!currentUser) return; try { const doc = await db.collection('users').doc(currentUser.uid).get(); if (doc.exists) { const d = doc.data(); if(document.getElementById('profileUsername'))document.getElementById('profileUsername').textContent = d.username || currentUser.displayName || 'N/A'; if(document.getElementById('profileEmail'))document.getElementById('profileEmail').textContent = currentUser.email; if(document.getElementById('profileFFID'))document.getElementById('profileFFID').textContent = d.ffId || 'N/A'; if(document.getElementById('profileIGN'))document.getElementById('profileIGN').textContent = d.ign || 'N/A'; if(document.getElementById('profileUsernameInput'))document.getElementById('profileUsernameInput').value = d.username || currentUser.displayName || ''; if(document.getElementById('profileFFIDInput'))document.getElementById('profileFFIDInput').value = d.ffId || ''; if(document.getElementById('profileIGNInput'))document.getElementById('profileIGNInput').value = d.ign || ''; } else { await db.collection('users').doc(currentUser.uid).set({ username: currentUser.displayName||currentUser.email.split('@')[0], email: currentUser.email, ffId:'', ign:'', createdAt: firebase.firestore.FieldValue.serverTimestamp(), walletBalance: 0 },{merge:true}); loadUserProfile();}} catch (e){ console.error("Profile load error:", e); showNotification("Profile load error: "+e.message, "error");}}
+        async function loadUserProfile() { if (!currentUser) return; try { const doc = await db.collection('users').doc(currentUser.uid).get(); if (doc.exists) { const d = doc.data(); const ign = d.ign || d.username || 'N/A'; if(document.getElementById('profileUsername')) document.getElementById('profileUsername').textContent = d.username || currentUser.displayName || 'N/A'; if(document.getElementById('profileEmail')) document.getElementById('profileEmail').textContent = currentUser.email; if(document.getElementById('profileFFID')) document.getElementById('profileFFID').textContent = d.ffId || 'N/A'; if(document.getElementById('profileIGN')) document.getElementById('profileIGN').textContent = ign; if(document.getElementById('walletUserID')) document.getElementById('walletUserID').textContent = ign; if(document.getElementById('profileUsernameInput')) document.getElementById('profileUsernameInput').value = d.username || currentUser.displayName || ''; if(document.getElementById('profileFFIDInput')) document.getElementById('profileFFIDInput').value = d.ffId || ''; if(document.getElementById('profileIGNInput')) document.getElementById('profileIGNInput').value = d.ign || ''; } else { await db.collection('users').doc(currentUser.uid).set({ username: currentUser.displayName||currentUser.email.split('@')[0], email: currentUser.email, ffId:'', ign:'', createdAt: firebase.firestore.FieldValue.serverTimestamp(), walletBalance: 0 },{merge:true}); loadUserProfile();}} catch (e){ console.error("Profile load error:", e); showNotification("Profile load error: "+e.message, "error");}}
         function openProfileModal() { openModal('profileModal');}
         if(profileForm) profileForm.addEventListener('submit', async (e) => { e.preventDefault(); if(!currentUser) return; const u = document.getElementById('profileUsernameInput').value.trim(); const f = document.getElementById('profileFFIDInput').value.trim(); const i = document.getElementById('profileIGNInput').value.trim(); if(!u||!f||!i){showNotification("All fields required.", "error"); return;} if(!/^\d+$/.test(f)){showNotification("FF ID must be numeric.", "error"); return;} try {await db.collection('users').doc(currentUser.uid).update({username:u, ffId:f, ign:i, updatedAt:firebase.firestore.FieldValue.serverTimestamp()}); if(currentUser.displayName !== u) await currentUser.updateProfile({displayName:u}); showNotification("Profile Updated!", "success"); loadUserProfile(); if(welcomeText) welcomeText.textContent = `Welcome, ${u}`; closeModal('profileModal');} catch(err){showNotification("Profile update error: "+err.message,"error");}});
         function openAddAmountModal() { if (!currentUser) { showNotification("Please login to add funds.", "info"); return; } if(addAmountForm) addAmountForm.reset(); openModal('addAmountModal'); }
