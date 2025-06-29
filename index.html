@@ -368,11 +368,6 @@
                 <div class="qr-code-container">
                     <img src="YOUR_QR_CODE_IMAGE_URL_HERE" alt="Admin UPI QR Code" id="adminQrCodeImage">
                 </div>
-                <!-- This 'a' tag is now controlled by JavaScript -->
-                <a href="#" id="downloadQrLink" class="download-qr-btn" title="Download QR Code" style="display:none;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                    <span>Download QR</span>
-                </a>
                 <div class="upi-id-container">
                     <span>Admin UPI:</span>
                     <strong id="adminUpiIdDisplay">yourupi@bank</strong>
@@ -460,7 +455,6 @@
             db.collection('appSettings').doc('paymentInfo').get().then(doc => { 
                 const adminUpiIdElement = document.getElementById('adminUpiIdDisplay'); 
                 const adminQrCodeImageElement = document.getElementById('adminQrCodeImage'); 
-                const downloadQrLinkElement = document.getElementById('downloadQrLink');
                 const copyBtnElement = document.querySelector('#addAmountModal .copy-btn'); 
                 const defaultAdminUpi = 'yourupi@bank'; 
                 const defaultQrUrl = 'YOUR_QR_CODE_IMAGE_URL_HERE'; 
@@ -473,31 +467,16 @@
                 } 
                 if(adminUpiIdElement) adminUpiIdElement.textContent = upiToUse; 
                 
-                // --- MODIFIED BLOCK FOR QR CODE & DOWNLOAD ---
+                // --- CLEANED BLOCK FOR QR CODE ---
                 if(adminQrCodeImageElement) { 
                     if (qrToUse && qrToUse !== 'YOUR_QR_CODE_IMAGE_URL_HERE') { 
                         adminQrCodeImageElement.src = qrToUse; 
                         adminQrCodeImageElement.style.display = 'inline-block';
-                        
-                        if (downloadQrLinkElement) {
-                            // Set attributes for fallback (e.g., right-click -> open in new tab)
-                            downloadQrLinkElement.href = qrToUse; 
-                            downloadQrLinkElement.target = "_blank"; 
-                            downloadQrLinkElement.style.display = 'inline-flex';
-
-                            // Attach our new download function to the click event
-                            downloadQrLinkElement.onclick = function(event) {
-                                event.preventDefault(); // IMPORTANT: stop the link's default behavior
-                                downloadImage(qrToUse, 'payment-qr.png');
-                            };
-                        }
-
                         const existingMessage = adminQrCodeImageElement.parentElement.querySelector('.qr-unavailable-text'); 
                         if (existingMessage) existingMessage.remove(); 
                     } else { 
                         adminQrCodeImageElement.alt = "QR Code not available"; 
                         adminQrCodeImageElement.style.display = 'none'; 
-                        if (downloadQrLinkElement) downloadQrLinkElement.style.display = 'none';
                         const qrContainer = adminQrCodeImageElement.parentElement; 
                         if (qrContainer && !qrContainer.querySelector('.qr-unavailable-text')) { 
                             const p = document.createElement('p'); 
@@ -508,7 +487,7 @@
                         }
                     } 
                 } 
-                // --- END OF MODIFIED BLOCK ---
+                // --- END OF CLEANED BLOCK ---
                 
                 if(copyBtnElement && adminUpiIdElement) copyBtnElement.setAttribute('onclick', `copyToClipboard('${upiToUse}', 'Admin UPI ID')`); 
             }).catch(err => { console.warn("Could not fetch admin payment settings, using defaults:", err); }); 
@@ -564,38 +543,6 @@
         let notificationTimeout;function showNotification(msg,type="success"){clearTimeout(notificationTimeout);notificationDiv.textContent=msg;let bg;switch(type){case "success":bg="var(--success-color)";break;case "error":bg="var(--danger-color)";break;case "info":bg="var(--info-color)";break;case "warning":bg="var(--primary-color)";break;default:bg="var(--secondary-color)";}notificationDiv.style.backgroundColor=bg;notificationDiv.style.display="block";notificationTimeout=setTimeout(()=>{notificationDiv.style.display="none";},4000);}
         function copyToClipboard(text, entityName = "Text") { if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(() => { showNotification(`${entityName} copied to clipboard!`, "success"); }).catch(err => { fallbackCopyTextToClipboard(text, entityName); }); } else { fallbackCopyTextToClipboard(text, entityName); } }
         function fallbackCopyTextToClipboard(text, entityName) { const ta = document.createElement("textarea"); ta.value = text; ta.style.position="fixed"; ta.style.top="0";ta.style.left="0";ta.style.width="2em";ta.style.height="2em";ta.style.padding="0";ta.style.border="none";ta.style.outline="none";ta.style.boxShadow="none";ta.style.background="transparent"; document.body.appendChild(ta); ta.focus(); ta.select(); try { if(document.execCommand('copy')) showNotification(`${entityName} copied!`, "success"); else showNotification(`Failed to copy ${entityName}.`, "warning"); } catch (err) { showNotification(`Failed to copy ${entityName}.`, "warning");} document.body.removeChild(ta); }
-        
-        // --- NEW FUNCTION TO HANDLE IMAGE DOWNLOAD ---
-        function downloadImage(url, filename) {
-            showNotification("Starting download...", "info");
-            fetch(url, {
-                mode: 'cors' // Important for cross-origin images
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.blob();
-            })
-            .then(blob => {
-                const blobUrl = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = blobUrl;
-                a.download = filename || 'download.png';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(blobUrl);
-                a.remove();
-                showNotification("Download complete!", "success");
-            })
-            .catch(err => {
-                console.error('Error downloading image:', err);
-                showNotification('Could not download image. Please try saving it manually.', 'error');
-                // As a fallback, open the image in a new tab
-                window.open(url, '_blank');
-            });
-        }
         
         function openPolicyModal(title, content) { const modalTitle = document.getElementById('policyModalTitle'); const modalContent = document.getElementById('policyModalContent'); if (modalTitle && modalContent) { modalTitle.textContent = title; modalContent.textContent = content; openModal('policyModal'); } }
 
